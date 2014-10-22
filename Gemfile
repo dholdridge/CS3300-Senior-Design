@@ -43,3 +43,10 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+
+# Cucumber for BDD
+group :test do
+  gem 'cucumber-rails', :require => false
+  gem 'database_cleaner'
+end
