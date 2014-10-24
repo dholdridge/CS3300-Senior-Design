@@ -37,7 +37,7 @@ Scenario: Two Team Members Bid Conflict
               with priority 1
 	When David places a bid on “Coca-Cola Project” with priority 2
 	Then The system asks David whether he would like to overwrite previous bid
-	     And if no, the system, does nothing
+	     And if no, the system does nothing
 	     And if yes, the system records “Coca-Cola Project” with priority 2 for team 	
 	     “Monsters”
 
