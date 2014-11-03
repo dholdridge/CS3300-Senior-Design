@@ -6,15 +6,15 @@ class ApplicationController < ActionController::Base
 	# This line ensures that all pages require CAS authentication
 	# in order to be viewed. If the user is not authenticated, they
 	# will be automatically redirected to the GT login page.
-	before_filter CASClient::Frameworks::Rails::Filter
+	#before_filter CASClient::Frameworks::Rails::Filter
 
-	def account
-		@username = session[:cas_user]
-		@extra_attributes = session[:cas_extra_attributes]
-	end
+	#def account
+	#	@username = session[:cas_user]
+	#	@extra_attributes = session[:cas_extra_attributes]
+	#end
 
-	def logout
-		CASClient::Frameworks::Rails::Filter.logout(self)
-	end
+	#def logout
+	#	CASClient::Frameworks::Rails::Filter.logout(self)
+	#end
 
 end
