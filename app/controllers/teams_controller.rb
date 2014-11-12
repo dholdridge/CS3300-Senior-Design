@@ -26,6 +26,7 @@ class TeamsController < ApplicationController
   def create
     @team = Team.new(team_params)
     @team.students << Student.find(team_params[:point_of_contact_id])
+    Student.find(team_params[:point_of_contact_id]).team_id = @team.id
 
     respond_to do |format|
       if @team.save

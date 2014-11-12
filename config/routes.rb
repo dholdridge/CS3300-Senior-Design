@@ -1,4 +1,6 @@
 SeniorDesignSite::Application.routes.draw do
+  resources :bids
+
   get "static_pages/home"
   resources :students
   resources :teams

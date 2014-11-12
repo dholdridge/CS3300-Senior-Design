@@ -11,7 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141023193505) do
+ActiveRecord::Schema.define(version: 20141112024934) do
+
+  create_table "bids", force: true do |t|
+    t.integer  "team_id"
+    t.integer  "project_id"
+    t.text     "bid_text"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "students", force: true do |t|
     t.string   "first_name"
