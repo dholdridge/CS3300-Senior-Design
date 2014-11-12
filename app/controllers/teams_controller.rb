@@ -24,18 +24,22 @@ class TeamsController < ApplicationController
   # POST /teams
   # POST /teams.json
   def create
-    @team = Team.new(team_params)
-    @team.students << Student.find(team_params[:point_of_contact_id])
-    Student.find(team_params[:point_of_contact_id]).team_id = @team.id
+    if logged_in?
+      @team = Team.new(team_params)
+      @team.students << current_student
+      current_student.team_id = @team.id
 
-    respond_to do |format|
-      if @team.save
-        format.html { redirect_to @team, notice: 'Team was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @team }
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @team.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        if @team.save
+          format.html { redirect_to @team, notice: 'Team was successfully created.' }
+          format.json { render action: 'show', status: :created, location: @team }
+        else
+          format.html { render action: 'new' }
+          format.json { render json: @team.errors, status: :unprocessable_entity }
+        end
       end
+    else
+      redirect_to teams_url
     end
   end
 
