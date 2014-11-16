@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Team:</strong>
+  <%= @join_team_contract.team_id %>
+</p>
+
+<p>
+  <strong>Student:</strong>
+  <%= @join_team_contract.student_id %>
+</p>
+
+<p>
+  <strong>Team accepted:</strong>
+  <%= @join_team_contract.team_accepted %>
+</p>
+
+<p>
+  <strong>Student accepted:</strong>
+  <%= @join_team_contract.student_accepted %>
+</p>
+
+<%= link_to 'Edit', edit_join_team_contract_path(@join_team_contract) %> |
+<%= link_to 'Back', join_team_contracts_path %>

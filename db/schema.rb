@@ -11,12 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141112024934) do
+ActiveRecord::Schema.define(version: 20141116232420) do
 
   create_table "bids", force: true do |t|
     t.integer  "team_id"
     t.integer  "project_id"
     t.text     "bid_text"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "join_team_contracts", force: true do |t|
+    t.integer  "team_id"
+    t.integer  "student_id"
+    t.boolean  "team_accepted"
+    t.boolean  "student_accepted"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

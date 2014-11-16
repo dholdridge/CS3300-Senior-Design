@@ -1,0 +1,33 @@
+<%= form_for(@join_team_contract) do |f| %>
+  <% if @join_team_contract.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@join_team_contract.errors.count, "error") %> prohibited this join_team_contract from being saved:</h2>
+
+      <ul>
+      <% @join_team_contract.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :team_id %><br>
+    <%= f.number_field :team_id %>
+  </div>
+  <div class="field">
+    <%= f.label :student_id %><br>
+    <%= f.number_field :student_id %>
+  </div>
+  <div class="field">
+    <%= f.label :team_accepted %><br>
+    <%= f.check_box :team_accepted %>
+  </div>
+  <div class="field">
+    <%= f.label :student_accepted %><br>
+    <%= f.check_box :student_accepted %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

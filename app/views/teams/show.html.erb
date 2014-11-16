@@ -17,5 +17,12 @@
   </p>
 <% end %>
 
+<p><strong>Potential Members</strong></p>
+<% @team.join_team_contracts.each do |t| %>
+  <p>
+    <%= t.student.last_name %>, <%= t.student.first_name %>
+  </p>
+<% end %>
+
 <%= link_to 'Edit', edit_team_path(@team) %> |
 <%= link_to 'Back', teams_path %>
