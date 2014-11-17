@@ -1,4 +1,5 @@
 module JoinTeamContractsHelper
+
   def team_accept(team)
     join_team_contract[:team_accepted] = true
     if complete?

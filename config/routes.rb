@@ -3,7 +3,9 @@ SeniorDesignSite::Application.routes.draw do
 
   get 'sessions/new'
   get 'static_pages/home'
+  get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
+  delete 'logout' => 'sessions#destroy'
 
   resources :bids
   resources :students
