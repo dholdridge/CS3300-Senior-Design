@@ -1,26 +1,36 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>First name:</strong>
-  <%= @student.first_name %>
-</p>
+<ul class="nav nav-pills">
+  <li role="presentation" class="active"><a href="#">Home</a></li>
+  <li role="presentation"><a href="#">Browse Teams</a></li>
+  <li role="presentation"><a href="#">Messages</a></li>
+  <li role="presentation">
+	<%= link_to 'Preferences', edit_student_path(@student) %> 
+  </li>
+</ul>
 
-<p>
-  <strong>Last name:</strong>
-  <%= @student.last_name %>
-</p>
+<div class="well">
+	<h2 style="font-size: 24px">Team Information for
+		<%= @student.first_name %>
+		<%= @student.last_name %>
+	</h2><hr />
+	
+	<p>
+		<strong><span class="label label-primary" style="font-size: 16px">Team Name:</span></strong>
+		<%= @student.team_id %>
+	</p>
+	<p>
+		<strong><span class="label label-primary" style="font-size: 16px">Team Members:</span></strong>
+		<%= @student.team_id %>
+	</p>
+	<p>
+		<strong><span class="label label-primary" style="font-size: 16px">Point of Contact:</span></strong>
+		<%= @student.team_id %>
+	</p>
+</div>
 
-<p>
-  <strong>Team:</strong>
-  <%= @student.team_id %>
-</p>
-
-<p><strong>Potential Teams:</strong></p>
-<% @student.join_team_contracts.each do |t| %>
-  <p>
-    <%= t.team.name %>
-  </p>
-<% end %>
-
-<%= link_to 'Edit', edit_student_path(@student) %> |
-<%= link_to 'Back', students_path %>
+<ul class="nav nav-pills">
+	<li role="presentation">
+		<%= link_to 'Back', students_path %>
+	</li>
+</ul>
