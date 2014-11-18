@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141116232420) do
+ActiveRecord::Schema.define(version: 20141118222744) do
 
   create_table "bids", force: true do |t|
     t.integer  "team_id"
