@@ -24,7 +24,7 @@
 	<% team_id = @student.team_id %>
 	<% team = Team.find_by_id(team_id) %>
 	<% unless team.nil? %>	
-		<div class="list-group" id="team-name-list-group">
+		<div class="list-group">
 			<a href="#" class="list-group-item">
 				<div class="row">
 					<div class="col-md-6">
@@ -42,7 +42,7 @@
 			</a>
 		</div>
 		
-		<div class="list-group" id="team-members-list-group">
+		<div class="list-group">
 			<a href="#" class="list-group-item">
 				<div class="row">
 					<div class="col-md-6">
@@ -65,7 +65,7 @@
 			</a>
 		</div>
 		
-		<div class="list-group" id="team-members-list-group">
+		<div class="list-group">
 			<a href="#" class="list-group-item">
 				<div class="row">
 					<div class="col-md-6">
@@ -99,48 +99,68 @@
 			<h3 class="panel-title">Project Information</h3>
 		</div>
 	</div>
-	
+		
 	<div class="panel-body">
 		<div class="list-group">
-		  <a href="#" class="list-group-item">
-			<h4 class="list-group-item-heading">Active Project</h4>
-			<p class="list-group-item-text">
-				<strong>Project Name:</strong><br />
-				<strong>Project Details:</strong>
-			</p>
-		  </a>
+			<a href="#" class="list-group-item">
+				<div class="row">
+					<div class="col-md-6">
+						<h4 class="list-group-item-heading">Active Project</h4>
+						<p class="list-group-item-text">
+							<strong>Project Name:</strong><br />
+							<strong>Project Details:</strong>
+						</p>
+					</div>
+					<div class="col-md-6">
+						<form action="#" method="get">
+							<button class="btn btn-default" type="submit" style="float:right">Edit</button>
+						</form>
+					</div>
+				</div>
+			</a>
 		</div>
 		
 		<div class="list-group">
-		  <a href="#" class="list-group-item">
-			<h4 class="list-group-item-heading">Active Bids</h4><br />
-			<p class="list-group-item-text">
-				<table class="table" style="border: 1px solid rgb(221, 221, 221)">
-					<thead>
-						<tr>
-							<th>Bid #</th>
-							<th>Priority</th>
-							<th>Project Name</th>
-							<th>Sponsor</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>1</td>
-							<td>2</td>
-							<td>Sample Name 1</td>
-							<td>Sample Sponsor 1</td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>1</td>
-							<td>Sample Name 2</td>
-							<td>Sample Sponsor 2</td>
-						</tr>
-					</tbody>
-				</table>
-			</p><br />
-		  </a>
+			<a href="#" class="list-group-item">
+				<div class="row">
+					<div class="col-md-10">
+						<h4 class="list-group-item-heading">Active Bids</h4><br />
+						<p class="list-group-item-text">
+							<div class="col-md-offset-2">
+								<table class="table" style="border: 1px solid rgb(221, 221, 221)">
+									<thead>
+										<tr>
+											<th>Bid #</th>
+											<th>Priority</th>
+											<th>Project Name</th>
+											<th>Sponsor</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>1</td>
+											<td>2</td>
+											<td>Sample Name 1</td>
+											<td>Sample Sponsor 1</td>
+										</tr>
+										<tr>
+											<td>2</td>
+											<td>1</td>
+											<td>Sample Name 2</td>
+											<td>Sample Sponsor 2</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</p><br />
+					</div>
+					<div class="col-md-2">
+						<form action="#" method="get">
+							<button class="btn btn-default" type="submit" style="float:right">Edit</button>
+						</form>
+					</div>
+				</div>
+			</a>
 		</div>
 		<div class="alert alert-info" role="alert">
 			Your team currently has no active project. <a href="#">Find a project to bid on.</a>
