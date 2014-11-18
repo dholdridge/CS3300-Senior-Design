@@ -1,12 +1,16 @@
 <p id="notice"><%= notice %></p>
 
 <ul class="nav nav-pills">
-  <li role="presentation" class="active"><a href="#">Home</a></li>
-  <li role="presentation"><a href="#">Browse Teams</a></li>
-  <li role="presentation"><a href="#">Messages</a></li>
-  <li role="presentation">
-	<%= link_to 'Preferences', edit_student_path(@student) %> 
-  </li>
+	<li role="presentation" class="active"><a href="#">Home</a></li>
+	<li role="presentation"><a href="#">Find Projects</a></li>
+	<li role="presentation"><a href="#">Browse Teams</a></li>
+	<li role="presentation"><a href="#">Messages</a></li>
+	<li role="presentation">
+		<%= link_to 'Preferences', edit_student_path(@student) %> 
+	</li>
+	<li role="presentation">
+		<%= link_to 'Back', students_path %>
+	</li>
 </ul><br />
 
 <div class="panel panel-primary">
@@ -167,13 +171,3 @@
 		</div>
 	</div>
 </div>
-
-<ul class="nav nav-pills">
-	<li role="presentation">
-		<%= link_to 'Back', students_path %>
-	</li>
-</ul>
-
-<script>
-
-</script>
