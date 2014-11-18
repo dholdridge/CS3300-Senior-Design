@@ -7,7 +7,7 @@
   <li role="presentation">
 	<%= link_to 'Preferences', edit_student_path(@student) %> 
   </li>
-</ul>
+</ul><br />
 
 <div class="panel panel-primary">
 	<div class="panel-heading">
@@ -21,39 +21,75 @@
 	</div>
 	
 	<div class="panel-body">
-		<div class="list-group">
-		  <a href="#" class="list-group-item">
-			<h4 class="list-group-item-heading">Team Name</h4>
-			<p class="list-group-item-text">
-				<strong>Team Name Goes Here</strong>
-			</p>
-		  </a>
+	<% team_id = @student.team_id %>
+	<% team = Team.find_by_id(team_id) %>
+	<% unless team.nil? %>	
+		<div class="list-group" id="team-name-list-group">
+			<a href="#" class="list-group-item">
+				<div class="row">
+					<div class="col-md-6">
+						<h4 class="list-group-item-heading">Team Name</h4>
+						<p class="list-group-item-text">
+							<%= team.name %>
+						</p>
+					</div>
+					<div class="col-md-6">
+						<form action="<%= edit_team_path(@student.team_id) %>" method="get">
+							<button class="btn btn-default" type="submit" style="float:right">Edit</button>
+						</form>
+					</div>
+				</div>
+			</a>
 		</div>
 		
-		<div class="list-group">
-		  <a href="#" class="list-group-item">
-			<h4 class="list-group-item-heading">Team Members</h4>
-			<p class="list-group-item-text">
-				<ul>
-					<li><strong>Name 1</strong></li>
-					<li><strong>Name 2</strong></li>
-					<li><strong>Name 3</strong></li>
-					<li><strong>Name 4</strong></li>
-					<li><strong>Name 5</strong></li>
-				</ul>
-			</p>
-		  </a>
+		<div class="list-group" id="team-members-list-group">
+			<a href="#" class="list-group-item">
+				<div class="row">
+					<div class="col-md-6">
+						<h4 class="list-group-item-heading">Team Members</h4>
+						<p class="list-group-item-text">
+							<ul>
+							<% team_members = Student.where("team_id = team_id") %> 
+							<% team_members.each { |t| %>
+								<li><%= t.first_name + ' ' + t.last_name %></li>
+							<% } %>
+							</ul>
+						</p>
+					</div>
+					<div class="col-md-6">
+						<form action="<%= team_path(@student.team_id) %>" method="get">
+							<button class="btn btn-default" type="submit" style="float:right">Edit</button>
+						</form>
+					</div>
+				</div>
+			</a>
 		</div>
 		
-		<div class="list-group">
-		  <a href="#" class="list-group-item">
-			<h4 class="list-group-item-heading">Point of Contact</h4>
-			<p class="list-group-item-text">
-				<strong>Name:</strong><br />
-				<strong>Email:</strong>
-			</p>
-		  </a>
+		<div class="list-group" id="team-members-list-group">
+			<a href="#" class="list-group-item">
+				<div class="row">
+					<div class="col-md-6">
+						<h4 class="list-group-item-heading">Point of Contact</h4>
+						<p class="list-group-item-text">
+							<% point_of_contact = team.point_of_contact %>
+							<strong>Name:</strong> <%= point_of_contact.first_name + ' ' + point_of_contact.last_name %><br />
+							<strong>Email:</strong> Note: Student model does not have an email field
+						</p>
+					</div>
+					<div class="col-md-6">
+						<form action="<%= team_path(@student.team_id) %>" method="get">
+							<button class="btn btn-default" type="submit" style="float:right">Edit</button>
+						</form>
+					</div>
+				</div>
+			</a>
 		</div>
+		
+	<% else %>
+		<div class="alert alert-info" role="alert">
+			You are not on a team. <a href="#">Get on a team.</a>
+		</div>	
+	<% end %>
 	</div>
 </div>
 
@@ -71,10 +107,7 @@
 			<p class="list-group-item-text">
 				<strong>Project Name:</strong><br />
 				<strong>Project Details:</strong>
-			</p><br />
-			<div class="alert alert-info" role="alert">
-				Your team currently has no active project.
-			</div>
+			</p>
 		  </a>
 		</div>
 		
@@ -107,10 +140,10 @@
 					</tbody>
 				</table>
 			</p><br />
-			<div class="alert alert-info" role="alert">
-				Your team currently has no active bids.
-			</div>
 		  </a>
+		</div>
+		<div class="alert alert-info" role="alert">
+			Your team currently has no active project. <a href="#">Find a project to bid on.</a>
 		</div>
 	</div>
 </div>
@@ -120,3 +153,7 @@
 		<%= link_to 'Back', students_path %>
 	</li>
 </ul>
+
+<script>
+
+</script>
