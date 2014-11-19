@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+<div id="wrap" class="container">
+	<div class="row-fluid">
+		<div class="span12">
+			<h1>Submit a New Project</h1>
+			<br>
+			<div class="span12">
+				Complete the form below to submit a project. Please <strong> DO NOT</strong> include any proprietary or confidential information.
+			<br>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+
+			<form accept-charset="UTF-8" action="/projects" class="simple_form form-horizontal" enctype="multipart/form-data" id="new_project" method="post" novalidate="novalidate">
+				<div class="well">
+					<h3>Company Information</h3>
+					<div class="control-group string optional project_company_name">
+						<label class="string optional control-label" for="project_company_attributes_name">Company Name</label>
+						<div class="controls">
+							<input class="string optional" id="project_company_attributes_name" name="project[company_attributes][name]" size="50" type="text">
+						</div>
+					</div>
+					<h5>Technical Contact</h5>
+					<div class="control-group string optional project_company_technical_name">
+						<label class="string optional control-label" for="project_company_attributes_technical_name">Name</label>
+						<div class="controls">
+							<input class="string optinal" id="project_company_attributes_technical_name" name="project[company_attributes][technical_name]" size="50" type="text">
+						</div>
+					</div>
+					<div class="control-group string optional project_company_technical_designation">
+					</div>
+					<div class="control-group string optional project_company_technical_email">
+					</div>
+					<div class="control-group email optional project_company_technical_name">
+					</div>
+					<div class="control-group tel optional project_company_technical_name">
+					</div>
+					<h5>Director Contact</h5>
+				</div>
+				<div class="well">
+					<h3>Project Information</h3>
+					<div class="control-group string optional project_name"></div>
+					<div class="control-group text optional project_background"></div>
+					<div class="control-group text optional project_concept"></div>
+					<div class="control-group text optional project_design"></div>
+					<div class="control-group text optional project_skills"></div>
+					<div class="control-group text optional project_solutions"></div>
+					<div class="control-group boolean optional project_nda_required"></div>
+					<div class="control-group boolean optional project_funding_commitment"></div>
+					<div class="control-group boolean optional project_company_email_conf"></div>
+				</div>
+				<div class="form-action">
+					<input class="btn btn-primary" name="online" type="submit" value="Create Project">
+					<a href="/" class="btn btn-link">cancel</a>
+				</div>
+			</form>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+
+</html>
