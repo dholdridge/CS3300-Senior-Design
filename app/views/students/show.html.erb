@@ -17,6 +17,31 @@
 	<div class="panel-heading">
 		<div class="panel-heading">
 			<h3 class="panel-title">
+				Student Profile for
+				<%= @student.first_name %>
+				<%= @student.last_name %>
+			</h3>
+		</div>
+	</div>
+	<div class="panel-body">
+		<div class="list-group">
+		  <a href="#" class="list-group-item">
+			<h4 class="list-group-item-heading">Email Address</h4>
+			<%= @student.email %>
+		  </a>
+		</br>
+		  <a href="#" class="list-group-item">
+		<h4 class="list-group-item-heading">Interests</h4> 
+		<%= @student.interests %>
+		  </a>
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<div class="panel-heading">
+			<h3 class="panel-title">
 				Team Information for
 				<%= @student.first_name %>
 				<%= @student.last_name %>
