@@ -82,17 +82,69 @@
 				</div>
 				<div class="well">
 					<h3>Project Information</h3>
-					<div class="control-group string optional project_name"></div>
-					<div class="control-group text optional project_background"></div>
-					<div class="control-group text optional project_concept"></div>
-					<div class="control-group text optional project_design"></div>
-					<div class="control-group text optional project_skills"></div>
-					<div class="control-group text optional project_solutions"></div>
-					<div class="control-group boolean optional project_nda_required"></div>
-					<div class="control-group boolean optional project_funding_commitment"></div>
-					<div class="control-group boolean optional project_company_email_conf"></div>
+					<div class="control-group string optional project_name">
+						<label class="string optional control-label" for="project_name">Project Title</label>
+						<div class="controls">
+							<input class="string optional" id="project_name" name="project[name]" size="50" type="text">
+						</div>
+					</div>
+					<div class="control-group text optional project_background">
+						<label class="string optional control-label" for="project_background">Background / Need</label>
+						<div class="controls">
+							<textarea class="text optional" cols="40" id="project_background" name="project[background]" rows="3" style="width: 90%"></textarea>
+						</div>
+					</div>
+					<div class="control-group text optional project_concept">
+						<label class="string optional control-label" for="project_concept">Concept</label>
+						<div class="controls">
+							<textarea class="text optional" cols="40" id="project_concept" name="project[concept]" rows="3" style="width: 90%"></textarea>
+						</div>	
+					</div>
+					<div class="control-group text optional project_design">
+						<label class="string optional control-label" for="project_design">Design Considerations</label>
+						<div class="controls">
+							<textarea class="text optional" cols="40" id="project_design" name="project[design]" rows="3" style="width: 90%"></textarea>
+						</div>
+					</div>
+					<div class="control-group text optional project_skills">
+						<label class="string optional control-label" for="project_skills">Desired Skills</label>
+						<div class="controls">
+							<textarea class="text optional" cols="40" id="project_skills" name="project[skills]" rows="3" style="width: 90%"></textarea>
+						</div>
+					</div>
+					<div class="control-group text optional project_solutions">
+						<label class="string optional control-label" for="project_solutions">Preferred Solution</label>
+						<div class="controls">
+							<textarea class="text optional" cols="40" id="project_solutions" name="project[solutions]" rows="3" style="width: 90%"></textarea>
+						</div>
+					</div>
+					<div class="control-group boolean optional project_nda_required">
+						<div class="controls">
+						<input name="project[nda_required]" type="hidden" value="0">
+						<label class="checkbox">
+							<input class="boolean optional" id="project_nda_required" name="project[nda_required]" type="checkbox" value="1">"NDA Required"
+						</label>
+						</div>
+					</div>
+					<div class="control-group boolean optional project_funding_commitment">
+						<div class="controls">
+						<input name="project[funding_commitment]" type="hidden" value="0">
+						<label class="checkbox">
+							<input class="boolean optional" id="project_funding_commitment" name="project[funding_commitment]" type="checkbox" value="1">
+							Interest in IP Assignment
+						</label>
+						</div>
+					</div>
+					<div class="control-group boolean optional project_company_email_conf">
+						<div class="controls">
+						<input name="project[company_attributes][email_conf]" type="hidden" value="0">
+						<label class="checkbox">
+							<input checked="checked" class="boolean optional" id="project_company_attributes_email_conf" name="project[company_attributes][email_conf]" type="checkbox" value="1">"Receive Email Confirmation"
+						</label>
+						</div>
+					</div>
 				</div>
-				<div class="form-action">
+				<div class="form-actions">
 					<input class="btn btn-primary" name="online" type="submit" value="Create Project">
 					<a href="/" class="btn btn-link">cancel</a>
 				</div>
