@@ -1,0 +1,41 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  project_company_name: MyString
+  project_company_technical_name: MyString
+  project_company_technical_designation: MyString
+  project_company_technical_email: MyString
+  project_company_technical_phone: MyString
+  project_company_director_name: MyString
+  project_company_director_designation: MyString
+  project_company_director_email: MyString
+  project_company_director_phone: MyString
+  project_name: MyString
+  project_background: MyString
+  project_concept: MyString
+  project_design: MyString
+  project_skills: MyString
+  project_solutions: MyString
+  project_nda_required: false
+  project_funding_commitment: false
+  project_company_email_conf: false
+
+two:
+  project_company_name: MyString
+  project_company_technical_name: MyString
+  project_company_technical_designation: MyString
+  project_company_technical_email: MyString
+  project_company_technical_phone: MyString
+  project_company_director_name: MyString
+  project_company_director_designation: MyString
+  project_company_director_email: MyString
+  project_company_director_phone: MyString
+  project_name: MyString
+  project_background: MyString
+  project_concept: MyString
+  project_design: MyString
+  project_skills: MyString
+  project_solutions: MyString
+  project_nda_required: false
+  project_funding_commitment: false
+  project_company_email_conf: false
