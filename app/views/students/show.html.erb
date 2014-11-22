@@ -102,7 +102,7 @@
 						<p class="list-group-item-text">
 							<% point_of_contact = team.point_of_contact %>
 							<strong>Name:</strong> <%= point_of_contact.first_name + ' ' + point_of_contact.last_name %><br />
-							<strong>Email:</strong> Note: Student model does not have an email field
+							<strong>Email:</strong> <%= point_of_contact.email %>
 						</p>
 					</div>
 					<div class="col-md-6">
@@ -125,7 +125,11 @@
 <div class="panel panel-primary">
 	<div class="panel-heading">
 		<div class="panel-heading">
-			<h3 class="panel-title">Project Information</h3>
+			<h3 class="panel-title">
+        Project Information for
+        <%= @student.first_name %>
+        <%= @student.last_name %>
+      </h3>
 		</div>
 	</div>
 		
@@ -195,4 +199,4 @@
 			Your team currently has no active project. <%= link_to "Find a project to bid on.", bid_path() %>
 		</div>
 	</div>
-</div>
+</div><br />

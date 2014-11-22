@@ -1,7 +1,7 @@
 <h1>Listing students</h1>
 
 <ul class="nav nav-pills">
-	<li role="presentation" class="active"><%= link_to 'Home', students_path %></li>
+	<li role="presentation" class="active"><%= link_to 'Home', students_path(@student) %></li>
 </ul><br />
 
 <div class="panel panel-primary">
@@ -33,7 +33,8 @@
             <% end %>
             <td>Random Project Name</td>
             <% unless team.nil? %>
-              <% poc = Student.find_by(first_name: team.point_of_contact.first_name, last_name: team.point_of_contact.last_name) %>
+              <% poc = Student.find_by(first_name: team.point_of_contact.first_name,
+                                       last_name: team.point_of_contact.last_name) %>
               <td><%= poc.first_name + ' ' + poc.last_name %></td>
             <% else %>
               <td>N/A</td>
