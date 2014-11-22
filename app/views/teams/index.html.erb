@@ -20,19 +20,20 @@
           <th>Point of Contact</th>
           <th>Number of Members</th>
           <th>Creation Date</th>
+          <th>Join a Team</th>
         </tr>
       </thead>
 
       <tbody>
         <% @teams.each do |team| %>
           <tr>
-            <td><%= team.name %></td>
-            <td>Random Project Name</td>
-            <td><%= team.point_of_contact.first_name + ' ' +
-                    team.point_of_contact.last_name %></td>
-                <% team_id = team.id %>
-            <td><%= Student.where("team_id = team_id").length %></td>
-            <td><%= team.created_at %>
+              <td><%= team.name %></td>
+              <td>Random Project Name</td>
+              <td><%= team.point_of_contact.first_name + ' ' +
+                      team.point_of_contact.last_name %></td>
+              <td><%= team.students.length %></td>
+              <td><%= team.created_at %></td>
+              <td><%= link_to 'Click to Join', team_path(id: team.id)%></td>
           </tr>
         <% end %>
       </tbody>
