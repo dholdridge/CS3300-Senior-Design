@@ -21,3 +21,6 @@ To do:
 - Making bids
 - Viewing teams
 - Viewing projects
+
+Bugs:
+- Student is not automatically logged in (current_student remains uninitialized) after creating a new student

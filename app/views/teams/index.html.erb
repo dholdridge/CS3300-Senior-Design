@@ -1,8 +1,10 @@
 <h1>Listing teams</h1>
 
 <ul class="nav nav-pills">
-	<li role="presentation" class="active"><%= link_to 'Home', students_path(@student) %></li>
+	<li role="presentation" class="active"><%= link_to 'Home', students_path() + '/' + current_student.id.to_s %></li>
+<% if current_student.team_id.nil? %>
 	<li role="presentation"><%= link_to 'Create New Team', new_team_path %></li>
+<% end %>
 </ul><br />
 
 <div class="panel panel-primary">
@@ -25,17 +27,29 @@
       </thead>
 
       <tbody>
-        <% @teams.each do |team| %>
-          <tr>
-              <td><%= team.name %></td>
-              <td>Random Project Name</td>
-              <td><%= team.point_of_contact.first_name + ' ' +
-                      team.point_of_contact.last_name %></td>
-              <td><%= team.students.length %></td>
-              <td><%= team.created_at %></td>
-              <td><%= link_to 'Click to Join', team_path(id: team.id)%></td>
-          </tr>
-        <% end %>
+		<% @teams.each do |team| %>
+			<% if current_student.team_id == team.id %>
+				<tr class="alert alert-success">
+			<% else %>
+				<tr>
+			<% end %>
+				<td><%= team.name %></td>
+				<td>Random Project Name</td>
+			<% unless team.point_of_contact.nil? %>
+				<td><%= team.point_of_contact.first_name + ' ' +
+								team.point_of_contact.last_name %></td>
+			<% else %>
+				<td style="color:red"> Error: no point of contact</td>
+			<% end %>
+				<td><%= team.students.length %></td>
+				<td><%= team.created_at %></td>
+			<% if current_student.team_id.nil? %>
+				<td><%= link_to 'Click to Join', team_path(id: team.id)%></td>
+			<% else %>
+				<td></td>
+			<% end %>
+			</tr>
+		<% end %>
       </tbody>
     </table>
   </div>
