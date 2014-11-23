@@ -123,13 +123,17 @@
 					<div class="col-md-6">
 						<h4 class="list-group-item-heading">Point of Contact</h4>
 						<p class="list-group-item-text">
-							<% point_of_contact = Student.find_by_id(team.point_of_contact.id) %>
+						<% point_of_contact = Student.find_by_id(team.point_of_contact_id) %>
+						<% if point_of_contact != @student %>
 							<strong>Name:</strong> <%= point_of_contact.first_name + ' ' + point_of_contact.last_name %><br />
 							<strong>Email:</strong> <%= point_of_contact.email %>
+						<% else %>
+							You are the team's point of contact.
+						<% end %>
 						</p>
 					</div>
 					<div class="col-md-6">
-					<% if @student.id == team.point_of_contact.id %>
+					<% if @student.id == team.point_of_contact_id %>
 						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-team-poc-modal" style="float:right">
 							Edit
 						</button>
@@ -139,7 +143,7 @@
 			</a>
 		</div>
 		
-		<% if @student.id == team.point_of_contact.id and team.students.length == 1 %>
+		<% if @student.id == team.point_of_contact_id and team.students.length == 1 %>
 			<div class="row">
 				<div class="col col-md-6">
 					<div class="list-group">

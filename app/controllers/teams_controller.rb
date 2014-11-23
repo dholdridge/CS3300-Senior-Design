@@ -49,8 +49,7 @@ class TeamsController < ApplicationController
     respond_to do |format|
       if @team.update(team_params)
 				if team_params.has_key?(:point_of_contact_id)
-					#doesn't work because it disassociates current team point of contact from the team
-					#@team.point_of_contact = Student.find_by_id(team_params[:point_of_contact_id])
+					@team.update_attribute(:point_of_contact_id, team_params[:point_of_contact_id])
 				end
         format.html { redirect_to (:back), notice: 'Team was successfully updated.' }
         format.json { head :no_content }
