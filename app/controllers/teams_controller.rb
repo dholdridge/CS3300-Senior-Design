@@ -52,7 +52,7 @@ class TeamsController < ApplicationController
 					#doesn't work because it disassociates current team point of contact from the team
 					#@team.point_of_contact = Student.find_by_id(team_params[:point_of_contact_id])
 				end
-        format.html { redirect_to (:back), notice: 'Team was successfully updated.' + current_student.team_id.to_s }
+        format.html { redirect_to (:back), notice: 'Team was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }

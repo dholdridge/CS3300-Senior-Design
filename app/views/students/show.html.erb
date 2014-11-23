@@ -58,6 +58,7 @@
 				</div>
 			</a>
 		</div>
+	</div>
 </div>
 
 <div class="panel panel-primary">
@@ -281,7 +282,7 @@
 				<%= form_for @student do |f| %>
 				<div class="modal-body">
 					<%= f.label :email %>:
-					<%= f.text_field :email %><br />
+					<%= f.text_field :email, :class => "form-control" %><br />
 					<%= f.hidden_field :team_id, value: @student.team_id %>
 					<%= f.hidden_field :student_id, value: @current_student.id %>
 				</div>
@@ -312,7 +313,7 @@
 				<%= form_for @student do |f| %>
 				<div class="modal-body">
 					<%= f.label :interests %>:
-					<%= f.text_area :interests, :size => "40x10" %><br />
+					<%= f.text_area :interests, :size => "40x10", :class => "form-control" %><br />
 					<%= f.hidden_field :team_id, value: @student.team_id %>
 					<%= f.hidden_field :student_id, value: @current_student.id %>
 				</div>
@@ -343,7 +344,7 @@
 				<%= form_for Team.find_by_id(@student.team_id) do |f| %>
 				<div class="modal-body">
 					<%= f.label :name %>:
-					<%= f.text_field :name %><br />
+					<%= f.text_field :name, :class => "form-control" %><br />
 					<%= f.hidden_field :team_id, value: @student.team_id %>
 					<%= f.hidden_field :student_id, value: @current_student.id %>
 				</div>
