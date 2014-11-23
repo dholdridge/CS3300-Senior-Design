@@ -25,17 +25,39 @@
 	</div>
 	<div class="panel-body">
 		<div class="list-group">
-		  <a href="#" class="list-group-item">
-				<h4 class="list-group-item-heading">Email Address</h4>
-				<%= @student.email %>
-		  </a>
-		</br>
-		  <a href="#" class="list-group-item">
-				<h4 class="list-group-item-heading">Interests</h4> 
-				<%= @student.interests %>
-		  </a>
+			<a href="#" class="list-group-item">
+				<div class="row">
+					<div class="col-md-6">
+						<h4 class="list-group-item-heading">Email</h4>
+						<p class="list-group-item-text">
+							<%= @student.email %>
+						</p>
+					</div>
+					<div class="col-md-6">
+						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-email-modal" style="float:right">
+							Edit
+						</button>
+					</div>
+				</div>
+			</a>
 		</div>
-	</div>
+		<div class="list-group">
+			<a href="#" class="list-group-item">
+				<div class="row">
+					<div class="col-md-6">
+						<h4 class="list-group-item-heading">Interests</h4>
+						<p class="list-group-item-text">
+							<%= simple_format(@student.interests) %>
+						</p>
+					</div>
+					<div class="col-md-6">
+						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-interests-modal" style="float:right">
+							Edit
+						</button>
+					</div>
+				</div>
+			</a>
+		</div>
 </div>
 
 <div class="panel panel-primary">
@@ -63,9 +85,9 @@
 						</p>
 					</div>
 					<div class="col-md-6">
-						<form action="<%= edit_team_path(@student.team_id) %>" method="get">
-							<button class="btn btn-default" type="submit" style="float:right">Edit</button>
-						</form>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-team-name-modal" style="float:right">
+							Edit
+						</button>
 					</div>
 				</div>
 			</a>
@@ -86,9 +108,9 @@
 						</p>
 					</div>
 					<div class="col-md-6">
-						<form action="<%= team_path(@student.team_id) %>" method="get">
-							<button class="btn btn-default" type="submit" style="float:right">Edit</button>
-						</form>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-team-poc-modal" style="float:right">
+							Edit
+						</button>
 					</div>
 				</div>
 			</a>
@@ -100,64 +122,66 @@
 					<div class="col-md-6">
 						<h4 class="list-group-item-heading">Point of Contact</h4>
 						<p class="list-group-item-text">
-							<% point_of_contact = team.point_of_contact %>
+							<% point_of_contact = Student.find_by_id(team.point_of_contact.id) %>
 							<strong>Name:</strong> <%= point_of_contact.first_name + ' ' + point_of_contact.last_name %><br />
 							<strong>Email:</strong> <%= point_of_contact.email %>
 						</p>
 					</div>
 					<div class="col-md-6">
-						<form action="<%= team_path(@student.team_id) %>" method="get">
-							<button class="btn btn-default" type="submit" style="float:right">Edit</button>
-						</form>
+					<% if @student.id == team.point_of_contact.id %>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-team-poc-modal" style="float:right">
+							Edit
+						</button>
+					<% end %>
 					</div>
 				</div>
 			</a>
 		</div>
 		
-	<% if @student == team.point_of_contact and team.students.length == 1 %>
-		<div class="row">
-			<div class="col col-md-6">
-				<div class="list-group">
-					<div class="list-group-item">
-						<h4>Leave Team</h4>
-						Note that once all members have left the team, it will be automatically deleted.
-						You will no longer be able to work on your team's project.<br /><br />
-						<button class="btn btn-danger" role="button">
-							<%= link_to 'Leave Team', team_path(id: @student.team_id),  
-										data: { confirm: 'Are you sure you want to delete your current team?' },
-										:style=>'color:#FFFFFF;', :class => "css_class" %>
-						</button>
+		<% if @student.id == team.point_of_contact.id and team.students.length == 1 %>
+			<div class="row">
+				<div class="col col-md-6">
+					<div class="list-group">
+						<div class="list-group-item">
+							<h4>Leave Team</h4>
+							Note that once all members have left the team, it will be automatically deleted.
+							You will no longer be able to work on your team's project.<br /><br />
+							<button class="btn btn-danger" role="button">
+								<%= link_to 'Leave Team', team_path(id: @student.team_id),  
+											data: { confirm: 'Are you sure you want to delete your current team?' },
+											:style=>'color:#FFFFFF;', :class => "css_class" %>
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="col col-md-6">
+					<div class="list-group">
+						<div class="list-group-item">
+							<h4>Delete Team</h4>
+							As a point of contact, you can delete your team if you are the only member on your team.<br /><br />
+							<button class="btn btn-danger" role="button">
+								<%= link_to 'Delete Team', team_path(id: @student.team_id), method: :delete, 
+											data: { confirm: 'Are you sure you want to delete your current team?' },
+											:style=>'color:#FFFFFF;', :class => "css_class" %>
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col col-md-6">
-				<div class="list-group">
-					<div class="list-group-item">
-						<h4>Delete Team</h4>
-						As a point of contact, you can delete your team if you are the only member on your team.<br /><br />
-						<button class="btn btn-danger" role="button">
-							<%= link_to 'Delete Team', team_path(id: @student.team_id), method: :delete, 
-										data: { confirm: 'Are you sure you want to delete your current team?' },
-										:style=>'color:#FFFFFF;', :class => "css_class" %>
-						</button>
-					</div>
+		<% else %>
+			<div class="list-group">
+				<div class="list-group-item">
+					<h4>Leave Team</h4>
+					Note that once all members have left the team, it will be automatically deleted.
+					You will no longer be able to work on your team's project.<br /><br />
+					<button class="btn btn-danger" role="button">
+						<%= link_to 'Leave Team', team_path(id: @student.team_id),  
+									data: { confirm: 'Are you sure you want to delete your current team?' },
+									:style=>'color:#FFFFFF;', :class => "css_class" %>
+					</button>
 				</div>
 			</div>
-		</div>
-	<% else %>
-		<div class="list-group">
-			<div class="list-group-item">
-				<h4>Leave Team</h4>
-				Note that once all members have left the team, it will be automatically deleted.
-				You will no longer be able to work on your team's project.<br /><br />
-				<button class="btn btn-danger" role="button">
-					<%= link_to 'Leave Team', team_path(id: @student.team_id),  
-								data: { confirm: 'Are you sure you want to delete your current team?' },
-								:style=>'color:#FFFFFF;', :class => "css_class" %>
-				</button>
-			</div>
-		</div>
-	<% end %>
+		<% end %>
 		
 	<% else %>
 		<div class="alert alert-info" role="alert">
@@ -245,3 +269,128 @@
 		</div>
 	</div>
 </div><br />
+
+<div class="modal fade" id="edit-email-modal" tabindex="-1" role="dialog" aria-labelledby="edit-email-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Edit Team Name</h4>
+      </div>
+			<% if logged_in? %>
+				<%= form_for @student do |f| %>
+				<div class="modal-body">
+					<%= f.label :email %>:
+					<%= f.text_field :email %><br />
+					<%= f.hidden_field :team_id, value: @student.team_id %>
+					<%= f.hidden_field :student_id, value: @current_student.id %>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col col-md-6">
+							<%= f.submit "Update Email", :class => "btn btn-primary" %>
+						</div>
+						<div class="col col-md-6">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+				<% end %>
+			<% end %>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="edit-interests-modal" tabindex="-1" role="dialog" aria-labelledby="edit-interests-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Edit Team Name</h4>
+      </div>
+			<% if logged_in? %>
+				<%= form_for @student do |f| %>
+				<div class="modal-body">
+					<%= f.label :interests %>:
+					<%= f.text_area :interests, :size => "40x10" %><br />
+					<%= f.hidden_field :team_id, value: @student.team_id %>
+					<%= f.hidden_field :student_id, value: @current_student.id %>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col col-md-6">
+							<%= f.submit "Update Interests", :class => "btn btn-primary" %>
+						</div>
+						<div class="col col-md-6">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+				<% end %>
+			<% end %>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="edit-team-name-modal" tabindex="-1" role="dialog" aria-labelledby="edit-team-name-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Edit Team Name</h4>
+      </div>
+			<% if logged_in? and !@student.team_id.nil? %>
+				<%= form_for Team.find_by_id(@student.team_id) do |f| %>
+				<div class="modal-body">
+					<%= f.label :name %>:
+					<%= f.text_field :name %><br />
+					<%= f.hidden_field :team_id, value: @student.team_id %>
+					<%= f.hidden_field :student_id, value: @current_student.id %>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col col-md-6">
+							<%= f.submit "Update Team Name", :class => "btn btn-primary" %>
+						</div>
+						<div class="col col-md-6">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+				<% end %>
+			<% end %>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="edit-team-poc-modal" tabindex="-1" role="dialog" aria-labelledby="edit-team-poc-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Edit Team Point of Contact</h4>
+      </div>
+			<% if logged_in? and !@student.team_id.nil? %>
+				<%= form_for Team.find_by_id(@student.team_id) do |f| %>
+				<div class="modal-body">
+					<%= f.label :point_of_contact %>:
+					<%= f.collection_select(:point_of_contact_id, Student.where("team_id = team_id"), :id, :full_name, {:prompt => true}, {:class => "form-control"}) %>
+					<%= f.hidden_field :team_id, value: @student.team_id %>
+					<%= f.hidden_field :student_id, value: @current_student.id %>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col col-md-6">
+							<%= f.submit "Update Team Point of Contact", :class => "btn btn-primary" %>
+						</div>
+						<div class="col col-md-6">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+				<% end %>
+			<% end %>
+    </div>
+  </div>
+</div>
+
