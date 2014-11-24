@@ -28,6 +28,7 @@ class TeamsController < ApplicationController
       @team = Team.new(team_params)
       @team.students << current_student
       current_student.team_id = @team.id
+      @team.point_of_contact_id = current_student.id
 
       respond_to do |format|
         if @team.save
