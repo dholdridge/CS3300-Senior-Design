@@ -63,19 +63,17 @@
 
 <div class="panel panel-primary">
 	<div class="panel-heading">
-		<div class="panel-heading">
-			<h3 class="panel-title">
-				Team Information for
-				<%= @student.first_name %>
-				<%= @student.last_name %>
-			</h3>
-		</div>
+		<h3 class="panel-title">
+			Team Information for
+			<%= @student.first_name %>
+			<%= @student.last_name %>
+		</h3>
 	</div>
 	
 	<div class="panel-body">
 	<% team_id = @student.team_id %>
-	<% team = Team.find_by_id(team_id) %>
-	<% unless team.nil? %>	
+	<% team = Team.find_by(id: team_id) %>
+	<% unless team.nil? %>
 		<div class="list-group">
 			<a href="#" class="list-group-item">
 				<div class="row">
@@ -101,10 +99,10 @@
 						<h4 class="list-group-item-heading">Team Members</h4>
 						<p class="list-group-item-text">
 							<ul>
-							<% team_members = Student.where("team_id = team_id") %> 
-							<% team_members.each { |t| %>
+							<% team_members = Student.where(team_id: @student.team_id) %> 
+							<% team_members.each do |t| %>
 								<li><%= t.first_name + ' ' + t.last_name %></li>
-							<% } %>
+							<% end %>
 							</ul>
 						</p>
 					</div>
@@ -123,8 +121,8 @@
 					<div class="col-md-6">
 						<h4 class="list-group-item-heading">Point of Contact</h4>
 						<p class="list-group-item-text">
-						<% point_of_contact = Student.find_by_id(team.point_of_contact_id) %>
-						<% if point_of_contact != @student %>
+						<% point_of_contact = team.point_of_contact %>
+						<% if !point_of_contact.nil? and point_of_contact.id != @student.id %>
 							<strong>Name:</strong> <%= point_of_contact.first_name + ' ' + point_of_contact.last_name %><br />
 							<strong>Email:</strong> <%= point_of_contact.email %>
 						<% else %>
@@ -143,50 +141,21 @@
 			</a>
 		</div>
 		
-		<% if @student.id == team.point_of_contact_id and team.students.length == 1 %>
-			<div class="row">
-				<div class="col col-md-6">
-					<div class="list-group">
-						<div class="list-group-item">
-							<h4>Leave Team</h4>
-							Note that once all members have left the team, it will be automatically deleted.
-							You will no longer be able to work on your team's project.<br /><br />
-							<button class="btn btn-danger" role="button">
-								<%= link_to 'Leave Team', team_path(id: @student.team_id),  
-											data: { confirm: 'Are you sure you want to delete your current team?' },
-											:style=>'color:#FFFFFF;', :class => "css_class" %>
-							</button>
-						</div>
-					</div>
-				</div>
-				<div class="col col-md-6">
-					<div class="list-group">
-						<div class="list-group-item">
-							<h4>Delete Team</h4>
-							As a point of contact, you can delete your team if you are the only member on your team.<br /><br />
-							<button class="btn btn-danger" role="button">
-								<%= link_to 'Delete Team', team_path(id: @student.team_id), method: :delete, 
-											data: { confirm: 'Are you sure you want to delete your current team?' },
-											:style=>'color:#FFFFFF;', :class => "css_class" %>
-							</button>
-						</div>
-					</div>
-				</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">Actions</h4>
 			</div>
-		<% else %>
-			<div class="list-group">
-				<div class="list-group-item">
-					<h4>Leave Team</h4>
-					Note that once all members have left the team, it will be automatically deleted.
-					You will no longer be able to work on your team's project.<br /><br />
-					<button class="btn btn-danger" role="button">
-						<%= link_to 'Leave Team', team_path(id: @student.team_id),  
-									data: { confirm: 'Are you sure you want to delete your current team?' },
-									:style=>'color:#FFFFFF;', :class => "css_class" %>
-					</button>
-				</div>
-			</div>
-		<% end %>
+			<div class="panel-body">
+				<% if logged_in? and !@student.team_id.nil? %>
+					<%= form_for @student do |f| %>
+						<!--<%= f.hidden_field :team_id, value: nil, :class => "form-control" %>-->
+						<div style="display:inline-block; float:right">
+						<%= f.submit "Leave Team", :class => "btn btn-danger" %>
+						</div><br />
+					<% end %>
+				<% end %>
+		</div>
+	</div>
 		
 	<% else %>
 		<div class="alert alert-info" role="alert">
@@ -344,8 +313,8 @@
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <h4 class="modal-title">Edit Team Name</h4>
       </div>
-			<% if logged_in? and !@student.team_id.nil? %>
-				<%= form_for Team.find_by_id(@student.team_id) do |f| %>
+			<% if logged_in? and !team.nil? %>
+				<%= form_for team do |f| %>
 				<div class="modal-body">
 					<%= f.label :name %>:
 					<%= f.text_field :name, :class => "form-control" %><br />
@@ -375,11 +344,11 @@
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <h4 class="modal-title">Edit Team Point of Contact</h4>
       </div>
-			<% if logged_in? and !@student.team_id.nil? %>
-				<%= form_for Team.find_by_id(@student.team_id) do |f| %>
+			<% if logged_in? and !team.nil? %>
+				<%= form_for team do |f| %>
 				<div class="modal-body">
 					<%= f.label :point_of_contact %>:
-					<%= f.collection_select(:point_of_contact_id, Student.where("team_id = team_id"), :id, :full_name, {:prompt => true}, {:class => "form-control"}) %>
+					<%= f.collection_select(:point_of_contact_id, Student.where(team_id: @student.team_id), :id, :full_name, {:prompt => true}, {:class => "form-control"}) %>
 					<%= f.hidden_field :team_id, value: @student.team_id %>
 					<%= f.hidden_field :student_id, value: @current_student.id %>
 				</div>

@@ -1,6 +1,6 @@
 class StudentsController < ApplicationController
   before_action :set_student, only: [:show, :edit, :update, :destroy]
-
+	
   # GET /students
   # GET /students.json
   def index
@@ -66,7 +66,7 @@ class StudentsController < ApplicationController
     def set_student
       @student = Student.find(params[:id])
     end
-
+		
     # Never trust parameters from the scary internet, only allow the white list through.
     def student_params
       params.require(:student).permit(:first_name, :last_name, :team_id, :email, :interests)

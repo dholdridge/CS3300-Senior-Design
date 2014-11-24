@@ -1,3 +1,5 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
 <h1>Listing teams</h1>
 
 <ul class="nav nav-pills">
@@ -17,40 +19,87 @@
     <table class="table" style="border: 1px solid rgb(221, 221, 221)">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Project</th>
+          <th>Team Name</th>
+          <th>Project Name</th>
           <th>Point of Contact</th>
           <th>Number of Members</th>
           <th>Creation Date</th>
-          <th>Join a Team</th>
+          <th>Join Team</th>
         </tr>
       </thead>
+			
+			<div class="row" style="margin-bottom:20px">
+				<div class="col col-md-1">
+					<div class="btn-group">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							Sort By <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#" id="team-name-header">Team Name</a></li>
+							<li><a href="#" id="project-name-header">Project Name</a></li>
+							<li><a href="#" id="poc-name-header">Point of Contact</a></li>
+							<li><a href="#" id="num-members-header">Number of Members</a></li>
+							<li><a href="#" id="creation-date-header">Creation Date</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col col-md-4">
+					<div style="display:inline-block; float:left">
+					<%= form_for @current_student, id: "sort-method-form" do |f| %>
+						<!--<%= f.hidden_field :full_name, id: "hidden-sort-method" %>-->
+						<%= f.submit "Sort", :class => "btn btn-default" %>
+					<% end %>
+					</div>
+				</div>
+			</div>
 
       <tbody>
-		<% @teams.each do |team| %>
-			<% if current_student.team_id == team.id %>
+			<% @teams.sort! { |a,b| a.point_of_contact.last_name <=> b.point_of_contact.last_name } %>
+			<% @teams.each do |team| %>
+				<% if current_student.team_id == team.id %>
 				<tr class="alert alert-success">
-			<% else %>
+				<% else %>
 				<tr>
+				<% end %>
+					<td><%= team.name %></td>
+					<td>Random Project Name</td>
+				<% unless team.point_of_contact.nil? %>
+					<td><%= team.point_of_contact.first_name + ' ' +
+									team.point_of_contact.last_name %></td>
+				<% else %>
+					<td style="color:red"> Error: no point of contact</td>
+				<% end %>
+					<td><%= team.students.length %></td>
+					<td><%= team.created_at %></td>
+				<% if current_student.team_id.nil? %>
+					<td><%= link_to 'Click to Join', team_path(id: team.id)%></td>
+				<% else %>
+					<td></td>
+				<% end %>
+				</tr>
 			<% end %>
-				<td><%= team.name %></td>
-				<td>Random Project Name</td>
-			<% unless team.point_of_contact.nil? %>
-				<td><%= team.point_of_contact.first_name + ' ' +
-								team.point_of_contact.last_name %></td>
-			<% else %>
-				<td style="color:red"> Error: no point of contact</td>
-			<% end %>
-				<td><%= team.students.length %></td>
-				<td><%= team.created_at %></td>
-			<% if current_student.team_id.nil? %>
-				<td><%= link_to 'Click to Join', team_path(id: team.id)%></td>
-			<% else %>
-				<td></td>
-			<% end %>
-			</tr>
-		<% end %>
       </tbody>
     </table>
   </div>
 </div>
+
+<script>
+	$(document).ready(function() {
+		$form = $('#sort-method-form');
+		$('#team-name-header').click(function() {
+			$('#hidden-sort-method').val('team_name');
+		});
+		$('#project-name-header').click(function() {
+			$('#hidden-sort-method').val('project_name');
+		});
+		$('#poc-name-header').click(function() {
+			$('#hidden-sort-method').val('poc_name');
+		});
+		$('#num-members-header').click(function() {
+			$('#hidden-sort-method').val('num_members');
+		});
+		$('#creation-date-header').click(function() {
+			$('#hidden-sort-method').val('creation_date');
+		});
+	});
+</script>
