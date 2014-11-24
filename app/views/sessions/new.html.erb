@@ -10,7 +10,23 @@
       <%= f.label :last_name %>
       <%= f.text_field :last_name, class: 'form-control' %>
 
-      <%= f.submit "Log in", class: "btn btn-primary" %>
+    <table>
+    	<tr>
+    		<td>
+    			<div class = ButtonLeft>
+    			<%= f.submit "Log in", class: "btn btn-primary" %>
+    		</div>
+    		</td>
+    		
+    		<td>
+    			<%= link_to "Create New", "students/new", class: "btn btn-primary" %>
+    		</td>
+    	</tr>
+    </table>
+      
+      
+ 
+      
     <% end %>
   </div>
 </div>

@@ -11,5 +11,5 @@ SeniorDesignSite::Application.routes.draw do
   resources :students
   resources :teams
 
-  root 'students#new'
+  root 'sessions#new'
 end
