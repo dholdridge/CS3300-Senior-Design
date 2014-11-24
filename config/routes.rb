@@ -1,4 +1,5 @@
 SeniorDesignSite::Application.routes.draw do
+  get "projects/new"
   get "static_pages/home"
   resources :students
   resources :teams
