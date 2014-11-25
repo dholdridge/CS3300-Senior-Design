@@ -1,30 +1,38 @@
 <h1>Listing professors</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>First name</th>
-      <th>Last name</th>
-      <th>Class</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+<ul class="nav nav-pills">
+  <li role="presentation" class="active"><%= link_to 'Home', root_url %></li>
+</ul><br />
 
-  <tbody>
-    <% @professors.each do |professor| %>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <div class="panel-title">
+      Professors
+    </div>
+  </div>
+  <div class="panel-body">
+    <table class="table" style="border: 1px solid rgb(221, 221, 221)">
+      <thead>
       <tr>
-        <td><%= professor.first_name %></td>
-        <td><%= professor.last_name %></td>
-        <td><%= professor.class_id %></td>
-        <td><%= link_to 'Show', professor %></td>
-        <td><%= link_to 'Edit', edit_professor_path(professor) %></td>
-        <td><%= link_to 'Destroy', professor, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <th>Name</th>
+        <th>Class ID</th>
+        <th>Select</th>
+        <th>Delete</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+      </thead>
+
+      <tbody>
+      <% @professors.each do |professor| %>
+          <tr>
+            <td><%= professor.first_name + ' ' + professor.last_name %></td>
+            <td><%= professor.class_id %></td>
+            <td><%= link_to 'Choose', professor %></td>
+            <td><%= link_to 'Delete', professor, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 <br>
 

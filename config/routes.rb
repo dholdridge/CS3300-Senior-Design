@@ -3,7 +3,9 @@ SeniorDesignSite::Application.routes.draw do
   get "uploads/uploadFile"
   resources :professors
   resources :bids
-  resources :students
+  resources :students do
+    collection { post :import }
+  end
   resources :teams
 
   get 'sessions/new'
