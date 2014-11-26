@@ -37,7 +37,9 @@
           <th>Point of Contact</th>
           <th>Number of Members</th>
           <th>Creation Date</th>
+				<% if current_student.team_id.nil? %>
           <th>Join Team</th>
+				<% end %>
         </tr>
       </thead>
 			
@@ -67,7 +69,7 @@
 			<% elsif sort_method == "num_members" %>
 				<% @teams.sort! { |a,b| a.students.length <=> b.students.length } %>
 			<% elsif sort_method == "creation_date" %>
-				<% @teams.sort! { |a,b| a.students.created_at <=> b.students.created_at } %>
+				<% @teams.sort! { |a,b| a.created_at <=> b.created_at } %>
 			<% end %>
 			<% @teams.each do |team| %>
 				<% if current_student.team_id == team.id %>
@@ -87,8 +89,6 @@
 					<td><%= team.created_at %></td>
 				<% if current_student.team_id.nil? %>
 					<td><%= link_to 'Click to Join', team_path(id: team.id)%></td>
-				<% else %>
-					<td></td>
 				<% end %>
 				</tr>
 			<% end %>
