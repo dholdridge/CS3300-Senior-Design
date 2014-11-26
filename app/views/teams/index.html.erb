@@ -1,5 +1,3 @@
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
 <!--Parses the query string available in the html bar-->
 <% query_string = request.query_string
 	 unless query_string.nil?
@@ -65,7 +63,7 @@
 			<% elsif sort_method == "project_name" %>
 				<!--Projects not yet associated with teams-->
 			<% elsif sort_method == "poc_name" %>
-				<% @teams.sort! { |a,b| a.point_of_contact.last_name <=> b.point_of_contact.last_name } %>
+				<% @teams.sort! { |a,b| [a.point_of_contact.last_name, a.point_of_contact.first_name] <=> [b.point_of_contact.last_name, b.point_of_contact.first_name] } %>
 			<% elsif sort_method == "num_members" %>
 				<% @teams.sort! { |a,b| a.students.length <=> b.students.length } %>
 			<% elsif sort_method == "creation_date" %>
