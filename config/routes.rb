@@ -1,8 +1,8 @@
 SeniorDesignSite::Application.routes.draw do
-  get "projects/new"
   get "static_pages/home"
   resources :students
   resources :teams
+  resources :projects
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
