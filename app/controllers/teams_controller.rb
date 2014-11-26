@@ -28,6 +28,7 @@ class TeamsController < ApplicationController
       @team = Team.new(team_params)
       @team.students << current_student
       current_student.team_id = @team.id
+      @team.point_of_contact_id = current_student.id
 
       respond_to do |format|
         if @team.save
@@ -48,7 +49,10 @@ class TeamsController < ApplicationController
   def update
     respond_to do |format|
       if @team.update(team_params)
-        format.html { redirect_to @team, notice: 'Team was successfully updated.' }
+				if team_params.has_key?(:point_of_contact_id)
+					@team.update_attribute(:point_of_contact_id, team_params[:point_of_contact_id])
+				end
+        format.html { redirect_to (:back), notice: 'Team was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }

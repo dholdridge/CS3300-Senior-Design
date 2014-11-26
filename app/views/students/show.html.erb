@@ -1,27 +1,371 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>First name:</strong>
-  <%= @student.first_name %>
-</p>
+<ul class="nav nav-pills">
+	<li role="presentation" class="active"><a href="#">Home</a></li>
+	<li role="presentation"><a href="#">Find Projects</a></li>
+	<li role="presentation"><a href="../teams">Browse Teams</a></li>
+	<li role="presentation"><a href="#">Messages</a></li>
+	<li role="presentation">
+		<%= link_to 'Preferences', edit_student_path(@student) %> 
+	</li>
+	<li role="presentation">
+		<%= link_to 'Back', students_path %>
+	</li>
+</ul><br />
 
-<p>
-  <strong>Last name:</strong>
-  <%= @student.last_name %>
-  <strong>HELLLLO</strong>
-</p>
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<div class="panel-heading">
+			<h3 class="panel-title">
+				Student Profile for
+				<%= @student.first_name %>
+				<%= @student.last_name %>
+			</h3>
+		</div>
+	</div>
+	<div class="panel-body">
+		<div class="list-group">
+			<a href="#" class="list-group-item">
+				<div class="row">
+					<div class="col-md-6">
+						<h4 class="list-group-item-heading">Email</h4>
+						<p class="list-group-item-text">
+							<%= @student.email %>
+						</p>
+					</div>
+					<div class="col-md-6">
+						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-email-modal" style="float:right">
+							Edit
+						</button>
+					</div>
+				</div>
+			</a>
+		</div>
+		<div class="list-group">
+			<a href="#" class="list-group-item">
+				<div class="row">
+					<div class="col-md-6">
+						<h4 class="list-group-item-heading">Interests</h4>
+						<p class="list-group-item-text">
+							<%= simple_format(@student.interests) %>
+						</p>
+					</div>
+					<div class="col-md-6">
+						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-interests-modal" style="float:right">
+							Edit
+						</button>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
+</div>
 
-<p>
-  <strong>Team:</strong>
-  <%= @student.team_id %>
-</p>
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<div class="panel-heading">
+			<h3 class="panel-title">
+				Team Information for
+				<%= @student.first_name %>
+				<%= @student.last_name %>
+			</h3>
+		</div>
+	</div>
+	
+	<div class="panel-body">
+	<% team_id = @student.team_id %>
+	<% team = Team.find_by(id: team_id) %>
+	<% unless team.nil? %>
+		<div class="list-group">
+			<a href="#" class="list-group-item">
+				<div class="row">
+					<div class="col-md-6">
+						<h4 class="list-group-item-heading">Team Name</h4>
+						<p class="list-group-item-text">
+							<%= team.name %>
+						</p>
+					</div>
+					<div class="col-md-6">
+						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-team-name-modal" style="float:right">
+							Edit
+						</button>
+					</div>
+				</div>
+			</a>
+		</div>
+		
+		<div class="list-group">
+			<a href="#" class="list-group-item">
+				<div class="row">
+					<div class="col-md-6">
+						<h4 class="list-group-item-heading">Team Members</h4>
+						<p class="list-group-item-text">
+							<ul>
+							<% team_members = Student.where(team_id: @student.team_id) %> 
+							<% team_members.each do |t| %>
+								<li><%= t.first_name + ' ' + t.last_name %></li>
+							<% end %>
+							</ul>
+						</p>
+					</div>
+					<div class="col-md-6">
+						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-team-poc-modal" style="float:right">
+							Edit
+						</button>
+					</div>
+				</div>
+			</a>
+		</div>
+		
+		<div class="list-group">
+			<a href="#" class="list-group-item">
+				<div class="row">
+					<div class="col-md-6">
+						<h4 class="list-group-item-heading">Point of Contact</h4>
+						<p class="list-group-item-text">
+						<% point_of_contact = team.point_of_contact %>
+						<% if !point_of_contact.nil? and point_of_contact.id != @student.id %>
+							<strong>Name:</strong> <%= point_of_contact.first_name + ' ' + point_of_contact.last_name %><br />
+							<strong>Email:</strong> <%= point_of_contact.email %>
+						<% else %>
+							You are the team's point of contact.
+						<% end %>
+						</p>
+					</div>
+					<div class="col-md-6">
+					<% if @student.id == team.point_of_contact_id %>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-team-poc-modal" style="float:right">
+							Edit
+						</button>
+					<% end %>
+					</div>
+				</div>
+			</a>
+		</div>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">Actions</h4>
+			</div>
+			<div class="panel-body">
+				<% if logged_in? and !@student.team_id.nil? %>
+					<%= form_for @student do |f| %>
+						<!--<%= f.hidden_field :team_id, value: nil, :class => "form-control" %>-->
+						<div style="display:inline-block; float:right">
+						<%= f.submit "Leave Team", :class => "btn btn-danger" %>
+						</div><br />
+					<% end %>
+				<% end %>
+		</div>
+	</div>
+		
+	<% else %>
+		<div class="alert alert-info" role="alert">
+			You are not on a team. <a href="#">Get on a team.</a>
+		</div>	
+	<% end %>
+	</div>
+</div>
 
-<p><strong>Potential Teams:</strong></p>
-<% @student.join_team_contracts.each do |t| %>
-  <p>
-    <%= t.team.name %>
-  </p>
-<% end %>
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<div class="panel-heading">
+			<h3 class="panel-title">
+				Project Information for
+				<%= @student.first_name %>
+				<%= @student.last_name %>
+			</h3>
+		</div>
+	</div>
+		
+	<div class="panel-body">
+		<div class="list-group">
+			<a href="#" class="list-group-item">
+				<div class="row">
+					<div class="col-md-6">
+						<h4 class="list-group-item-heading">Active Project</h4>
+						<p class="list-group-item-text">
+							<strong>Project Name:</strong><br />
+							<strong>Project Details:</strong>
+						</p>
+					</div>
+					<div class="col-md-6">
+						<form action="#" method="get">
+							<button class="btn btn-default" type="submit" style="float:right">Edit</button>
+						</form>
+					</div>
+				</div>
+			</a>
+		</div>
+		
+		<div class="list-group">
+			<a href="#" class="list-group-item">
+				<div class="row">
+					<div class="col-md-10">
+						<h4 class="list-group-item-heading">Active Bids</h4><br />
+						<p class="list-group-item-text">
+							<div class="col-md-offset-2">
+								<table class="table" style="border: 1px solid rgb(221, 221, 221)">
+									<thead>
+										<tr>
+											<th>Bid #</th>
+											<th>Priority</th>
+											<th>Project Name</th>
+											<th>Sponsor</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>1</td>
+											<td>2</td>
+											<td>Sample Name 1</td>
+											<td>Sample Sponsor 1</td>
+										</tr>
+										<tr>
+											<td>2</td>
+											<td>1</td>
+											<td>Sample Name 2</td>
+											<td>Sample Sponsor 2</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</p><br />
+					</div>
+					<div class="col-md-2">
+						<form action="#" method="get">
+							<button class="btn btn-default" type="submit" style="float:right">Edit</button>
+						</form>
+					</div>
+				</div>
+			</a>
+		</div>
+		<div class="alert alert-info" role="alert">
+			Your team currently has no active project. <%= link_to "Find a project to bid on.", bid_path() %>
+		</div>
+	</div>
+</div><br />
 
-<%= link_to 'Edit', edit_student_path(@student) %> |
-<%= link_to 'Back', students_path %>
+<div class="modal fade" id="edit-email-modal" tabindex="-1" role="dialog" aria-labelledby="edit-email-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Edit Team Name</h4>
+      </div>
+			<% if logged_in? %>
+				<%= form_for @student do |f| %>
+				<div class="modal-body">
+					<%= f.label :email %>:
+					<%= f.text_field :email, :class => "form-control" %><br />
+					<%= f.hidden_field :team_id, value: @student.team_id %>
+					<%= f.hidden_field :student_id, value: @current_student.id %>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col col-md-6">
+							<%= f.submit "Update Email", :class => "btn btn-primary" %>
+						</div>
+						<div class="col col-md-6">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+				<% end %>
+			<% end %>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="edit-interests-modal" tabindex="-1" role="dialog" aria-labelledby="edit-interests-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Edit Team Name</h4>
+      </div>
+			<% if logged_in? %>
+				<%= form_for @student do |f| %>
+				<div class="modal-body">
+					<%= f.label :interests %>:
+					<%= f.text_area :interests, :size => "40x10", :class => "form-control" %><br />
+					<%= f.hidden_field :team_id, value: @student.team_id %>
+					<%= f.hidden_field :student_id, value: @current_student.id %>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col col-md-6">
+							<%= f.submit "Update Interests", :class => "btn btn-primary" %>
+						</div>
+						<div class="col col-md-6">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+				<% end %>
+			<% end %>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="edit-team-name-modal" tabindex="-1" role="dialog" aria-labelledby="edit-team-name-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Edit Team Name</h4>
+      </div>
+			<% if logged_in? and !team.nil? %>
+				<%= form_for team do |f| %>
+				<div class="modal-body">
+					<%= f.label :name %>:
+					<%= f.text_field :name, :class => "form-control" %><br />
+					<%= f.hidden_field :team_id, value: @student.team_id %>
+					<%= f.hidden_field :student_id, value: @current_student.id %>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col col-md-6">
+							<%= f.submit "Update Team Name", :class => "btn btn-primary" %>
+						</div>
+						<div class="col col-md-6">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+				<% end %>
+			<% end %>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="edit-team-poc-modal" tabindex="-1" role="dialog" aria-labelledby="edit-team-poc-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Edit Team Point of Contact</h4>
+      </div>
+			<% if logged_in? and !team.nil? %>
+				<%= form_for team do |f| %>
+				<div class="modal-body">
+					<%= f.label :point_of_contact %>:
+					<%= f.collection_select(:point_of_contact_id, Student.where(team_id: @student.team_id), :id, :full_name, {:prompt => true}, {:class => "form-control"}) %>
+					<%= f.hidden_field :team_id, value: @student.team_id %>
+					<%= f.hidden_field :student_id, value: @current_student.id %>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col col-md-6">
+							<%= f.submit "Update Team Point of Contact", :class => "btn btn-primary" %>
+						</div>
+						<div class="col col-md-6">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+				<% end %>
+			<% end %>
+    </div>
+  </div>
+</div>
