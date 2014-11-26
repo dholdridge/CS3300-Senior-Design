@@ -37,6 +37,7 @@
           <th>Point of Contact</th>
           <th>Number of Members</th>
           <th>Creation Date</th>
+					<th>Link</th>
 				<% if current_student.team_id.nil? %>
           <th>Join Team</th>
 				<% end %>
@@ -72,16 +73,33 @@
 				<% @teams.sort! { |a,b| a.created_at <=> b.created_at } %>
 			<% end %>
 			<% @teams.each do |team| %>
+				<% team_info = ''
+					 team.students.each do |student|
+						if student == team.point_of_contact
+							team_info += student.full_name + ' (PoC) <br />'
+						else
+							team_info += student.full_name + '<br />'
+						end
+				   end 
+					 team_info += '<br />Contact: ' + '<u>' + team.point_of_contact.email + '</u>'
+				%>	
+			
 				<% if current_student.team_id == team.id %>
-				<tr class="alert alert-success">
+				<tr class="alert alert-success table-row" 
+						data-toggle="popover" data-placement="right" 
+						data-title="<%=team.name%>" 
+						data-content="<%=team_info%>">
 				<% else %>
-				<tr>
+				<tr class="table-row" 
+						data-toggle="popover" data-placement="right" 
+						data-title="<%=team.name%>" 
+						data-content="<%=team_info%>">
 				<% end %>
 					<td><%= team.name %></td>
 					<td>Random Project Name</td>
 				<% unless team.point_of_contact.nil? %>
-					<td><%= team.point_of_contact.first_name + ' ' +
-									team.point_of_contact.last_name %></td>
+					<td><%= team.point_of_contact.last_name + ', ' +
+									team.point_of_contact.first_name %></td>
 				<% else %>
 					<td style="color:red"> Error: no point of contact</td>
 				<% end %>
@@ -90,6 +108,7 @@
 				<% if current_student.team_id.nil? %>
 					<td><%= link_to 'Click to Join', team_path(id: team.id)%></td>
 				<% end %>
+					<td><a href="/teams/<%=team.id%>" target="_blank">Link</a></td>
 				</tr>
 			<% end %>
       </tbody>
@@ -124,6 +143,16 @@
 			console.log('Sorting teams by team creation date.');
 			$('#hidden-sort-method').val('creation_date');
 			$form.submit();
+		});
+	});
+	
+	$(function () {
+		$(".table-row").hover(function () {
+			$(this).popover({
+				html: true
+			}).popover('show');
+		}, function () {
+			$(this).popover('hide');
 		});
 	});
 </script>
