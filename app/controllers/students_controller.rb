@@ -12,8 +12,8 @@ class StudentsController < ApplicationController
 				Team.destroy(team.id)
 				JoinTeamContract.destroy_all(:team_id => team.id)
 			elsif team.point_of_contact == @student
-				team.point_of_contact = team.students.first
-				team.point_of_contact_id = team.student.first.id
+				team.update_attribute(:point_of_contact, team.students.first)
+				team.update_attribute(:point_of_contact_id, team.point_of_contact.id)
 			end
 		end
 	end

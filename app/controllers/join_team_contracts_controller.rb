@@ -5,7 +5,7 @@ class JoinTeamContractsController < ApplicationController
 	def finalize_contract
 		team_to_join = Team.find_by_id(@join_team_contract.team_id)
 		student = Student.find_by_id(@join_team_contract.student_id)
-		team_to_join.students << student
+		team_to_join.students.push(student)
 		student.team_id = team_to_join.id
 		JoinTeamContract.destroy_all(:student_id => student.id)
 	end
