@@ -1,5 +1,22 @@
 class StudentsController < ApplicationController
   before_action :set_student, only: [:show, :edit, :update, :destroy]
+	helper_method :leave_team
+	
+	def leave_team()
+		team_id = student_params[:team_id]
+		team = Team.find_by_id(team_id)
+		if team.students.include?(@student)
+			team.students.delete(@student)
+			@student.team_id = nil
+			if team.students.empty?
+				Team.destroy(team.id)
+				JoinTeamContract.destroy_all(:team_id => team.id)
+			elsif team.point_of_contact == @student
+				team.point_of_contact = team.students.first
+				team.point_of_contact_id = team.student.first.id
+			end
+		end
+	end
 
   # GET /students
   # GET /students.json
@@ -43,17 +60,7 @@ class StudentsController < ApplicationController
     respond_to do |format|
       if @student.update(student_params)
 				if student_params.length == 1 and student_params.has_key?(:team_id)
-					team = Team.find_by_id(student_params[:team_id])
-					if team.students.include?(@student)
-						team.students.delete(@student)
-						@student.team_id = nil
-						if team.students.empty?
-							Team.destroy(team.id)
-						elsif team.point_of_contact == @student
-							team.point_of_contact = team.students.first
-							team.point_of_contact_id = team.student.first.id
-						end
-					end
+					leave_team()
 				end
         format.html { redirect_to @student, notice: 'Student was successfully updated.' }
         format.json { head :no_content }

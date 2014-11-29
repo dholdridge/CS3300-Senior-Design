@@ -107,7 +107,7 @@
 					<td><%= team.created_at %></td>
 					<td><a href="/teams/<%=team.id%>" target="_blank">Link</a></td>
 				<% if current_student.team_id.nil? %>
-					<td><%= link_to 'Click to Join', team_path(id: team.id)%></td>
+					<td><%= link_to 'Click to Join', team_path(id: team.id) %></td>
 				<% end %>
 				</tr>
 			<% end %>
