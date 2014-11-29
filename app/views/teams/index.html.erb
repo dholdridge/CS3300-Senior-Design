@@ -1,3 +1,44 @@
+<style>
+/*Panel tabs*/
+.panel-tabs {
+    position: relative;
+    bottom: 30px;
+    clear:both;
+    border-bottom: 1px solid transparent;
+}
+
+.panel-tabs > li {
+    float: left;
+    margin-bottom: -1px;
+}
+
+.panel-tabs > li > a {
+    margin-right: 2px;
+    margin-top: 5px;
+    line-height: .85;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+    color: #ffffff;
+}
+
+.panel-tabs > li > a:hover {
+    border-color: transparent;
+    color: #ffffff;
+    background-color: transparent;
+}
+
+.panel-tabs > li.active > a,
+.panel-tabs > li.active > a:hover,
+.panel-tabs > li.active > a:focus {
+    color: #fff;
+    cursor: default;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background-color: rgba(255,255,255, .23);
+    border-bottom-color: transparent;
+</style>
+
 <!--Parses the query string available in the html bar-->
 <% query_string = request.query_string
 	 unless query_string.nil?
@@ -24,95 +65,151 @@
 
 <div class="panel panel-primary">
   <div class="panel-heading">
-    <div class="panel-title">
-      List of Teams
-    </div>
+		<h3 class="panel-title">Team Search</h3>
+    <span class="pull-right">
+			<ul class="nav panel-tabs">
+					<li class="active"><a href="#tab1" data-toggle="tab">List Teams</a></li>
+					<li><a href="#tab2" data-toggle="tab">List Team-less Students</a></li>
+			</ul>
+		</span>
   </div>
   <div class="panel-body">
-    <table class="table" style="border: 1px solid rgb(221, 221, 221)">
-      <thead>
-        <tr>
-          <th>Team Name</th>
-          <th>Project Name</th>
-          <th>Point of Contact</th>
-          <th>Number of Members</th>
-          <th>Creation Date</th>
-					<th>Link</th>
-				<% if current_student.team_id.nil? %>
-          <th>Join Team</th>
-				<% end %>
-        </tr>
-      </thead>
-			
-			<div class="row" style="margin-bottom:20px">
-				<div class="col col-md-1">
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-							Sort By <span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#" id="team-name-header">Team Name</a></li>
-							<li><a href="#" id="project-name-header">Project Name</a></li>
-							<li><a href="#" id="poc-name-header">Point of Contact</a></li>
-							<li><a href="#" id="num-members-header">Number of Members</a></li>
-							<li><a href="#" id="creation-date-header">Creation Date</a></li>
-						</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="tab1">
+				<table class="table" style="border: 1px solid rgb(221, 221, 221)">
+					<thead>
+						<tr>
+							<th>Team Name</th>
+							<th>Project Name</th>
+							<th>Point of Contact</th>
+							<th>Number of Members</th>
+							<th>Creation Date</th>
+							<th>Link</th>
+						<% if current_student.team_id.nil? %>
+							<th>Join Team</th>
+						<% end %>
+						</tr>
+					</thead>
+					
+					<div class="row" style="margin-bottom:20px">
+						<div class="col col-md-1">
+							<div class="btn-group">
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									Sort By <span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu" role="menu">
+									<li><a href="#" id="team-name-header">Team Name</a></li>
+									<li><a href="#" id="project-name-header">Project Name</a></li>
+									<li><a href="#" id="poc-name-header">Point of Contact</a></li>
+									<li><a href="#" id="num-members-header">Number of Members</a></li>
+									<li><a href="#" id="creation-date-header">Creation Date</a></li>
+								</ul>
+							</div>
+						</div>
 					</div>
-				</div>
+					<tbody>
+					<% if sort_method.nil? or sort_method == "team_name" %>
+						<% @teams.sort! { |a,b| a.name <=> b.name } %>
+					<% elsif sort_method == "project_name" %>
+						<!--Projects not yet associated with teams-->
+					<% elsif sort_method == "poc_name" %>
+						<% @teams.sort! { |a,b| [a.point_of_contact.last_name, a.point_of_contact.first_name] <=> [b.point_of_contact.last_name, b.point_of_contact.first_name] } %>
+					<% elsif sort_method == "num_members" %>
+						<% @teams.sort! { |a,b| a.students.length <=> b.students.length } %>
+					<% elsif sort_method == "creation_date" %>
+						<% @teams.sort! { |a,b| a.created_at <=> b.created_at } %>
+					<% end %>
+					<% @teams.each do |team| %>
+						<% team_info = ''
+							 team.students.each do |student|
+								if student == team.point_of_contact
+									team_info += student.full_name + ' (PoC) <br />'
+								else
+									team_info += student.full_name + '<br />'
+								end
+							 end 
+							 team_info += '<br />Contact: ' + '<u>' + team.point_of_contact.email + '</u>'
+						%>	
+					
+						<% if current_student.team_id == team.id %>
+						<tr class="alert alert-success table-row" 
+								data-toggle="popover" data-placement="right" 
+								data-title="<%=team.name%>" 
+								data-content="<%=team_info%>">
+						<% else %>
+						<tr class="table-row" 
+								data-toggle="popover" data-placement="right" 
+								data-title="<%=team.name%>" 
+								data-content="<%=team_info%>">
+						<% end %>
+							<td><%= team.name %></td>
+							<td>Random Project Name</td>
+						<% unless team.point_of_contact.nil? %>
+							<td><%= team.point_of_contact.last_name + ', ' +
+											team.point_of_contact.first_name %></td>
+						<% else %>
+							<td style="color:red"> Error: no point of contact</td>
+						<% end %>
+							<td><%= team.students.length %></td>
+							<td><%= team.created_at %></td>
+							<td><a href="/teams/<%=team.id%>" target="_blank">Link</a></td>
+						<% if current_student.team_id.nil? %>
+							<td><%= link_to 'Click to Join', team_path(id: team.id) %></td>
+						<% end %>
+						</tr>
+					<% end %>
+					</tbody>
+				</table>
 			</div>
-      <tbody>
-			<% if sort_method.nil? or sort_method == "team_name" %>
-				<% @teams.sort! { |a,b| a.name <=> b.name } %>
-			<% elsif sort_method == "project_name" %>
-				<!--Projects not yet associated with teams-->
-			<% elsif sort_method == "poc_name" %>
-				<% @teams.sort! { |a,b| [a.point_of_contact.last_name, a.point_of_contact.first_name] <=> [b.point_of_contact.last_name, b.point_of_contact.first_name] } %>
-			<% elsif sort_method == "num_members" %>
-				<% @teams.sort! { |a,b| a.students.length <=> b.students.length } %>
-			<% elsif sort_method == "creation_date" %>
-				<% @teams.sort! { |a,b| a.created_at <=> b.created_at } %>
-			<% end %>
-			<% @teams.each do |team| %>
-				<% team_info = ''
-					 team.students.each do |student|
-						if student == team.point_of_contact
-							team_info += student.full_name + ' (PoC) <br />'
-						else
-							team_info += student.full_name + '<br />'
-						end
-				   end 
-					 team_info += '<br />Contact: ' + '<u>' + team.point_of_contact.email + '</u>'
-				%>	
-			
-				<% if current_student.team_id == team.id %>
-				<tr class="alert alert-success table-row" 
-						data-toggle="popover" data-placement="right" 
-						data-title="<%=team.name%>" 
-						data-content="<%=team_info%>">
-				<% else %>
-				<tr class="table-row" 
-						data-toggle="popover" data-placement="right" 
-						data-title="<%=team.name%>" 
-						data-content="<%=team_info%>">
-				<% end %>
-					<td><%= team.name %></td>
-					<td>Random Project Name</td>
-				<% unless team.point_of_contact.nil? %>
-					<td><%= team.point_of_contact.last_name + ', ' +
-									team.point_of_contact.first_name %></td>
-				<% else %>
-					<td style="color:red"> Error: no point of contact</td>
-				<% end %>
-					<td><%= team.students.length %></td>
-					<td><%= team.created_at %></td>
-					<td><a href="/teams/<%=team.id%>" target="_blank">Link</a></td>
-				<% if current_student.team_id.nil? %>
-					<td><%= link_to 'Click to Join', team_path(id: team.id) %></td>
-				<% end %>
-				</tr>
-			<% end %>
-      </tbody>
-    </table>
+			<div class="tab-pane" id="tab2">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Student Name</th>
+							<th>Email</th>
+							<th>Link</th>
+							<th>Invite</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% teamless_students = Student.where(:team_id => nil) %>
+						<% teamless_students.each do |student| %>
+							<tr>
+								<td><%= student.full_name %></td>
+								<td><%= student.email %></td>
+								<td><%= link_to 'Link', student_path(id: student.id) %></td>
+								<% unless current_student.team_id.nil? %>
+									<% current_contract = JoinTeamContract.where(:student_id => student.id, :team_id => current_student.team_id).first %>
+									<% if current_contract.nil? %>
+										<%= form_for JoinTeamContract.new do |f| %>
+											<%= f.hidden_field :team_id, value: current_student.team_id %>
+											<%= f.hidden_field :student_id, value: student.id %>
+											<%= f.hidden_field :team_accepted, value: true %>
+											<%= f.hidden_field :student_accepted, value: false %>
+											<div style="display:inline-block; float:right">
+												<td><%= f.submit "Invite" %></td>
+											</div>
+										<% end %>
+									<% else %>
+										<%= form_for current_contract do |f| %>
+											<%= f.hidden_field :team_id, value: current_student.team_id %>
+											<%= f.hidden_field :student_id, value: student.id %>
+											<%= f.hidden_field :team_accepted, value: true %>
+											<%= f.hidden_field :student_accepted, value: false %>
+											<div style="display:inline-block; float:right">
+												<td><%= f.submit "Invite" %></td>
+											</div>
+										<% end %>
+									<% end %>
+								<% else %>
+									<td></td>
+								<% end %>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>
+			</div>
+		</div>
   </div>
 </div>
 
