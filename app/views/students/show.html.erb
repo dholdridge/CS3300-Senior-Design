@@ -150,7 +150,7 @@
 			<div class="panel-body">
 				<% if logged_in? and !@student.team_id.nil? %>
 					<%= form_for @student do |f| %>
-						<!--<%= f.hidden_field :team_id, value: nil, :class => "form-control" %>-->
+						<%= f.hidden_field :team_id, :class => "form-control" %>
 						<div style="display:inline-block; float:right">
 						<%= f.submit "Leave Team", :class => "btn btn-danger" %>
 						</div><br />

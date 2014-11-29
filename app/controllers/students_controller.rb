@@ -42,6 +42,19 @@ class StudentsController < ApplicationController
   def update
     respond_to do |format|
       if @student.update(student_params)
+				if student_params.length == 1 and student_params.has_key?(:team_id)
+					team = Team.find_by_id(student_params[:team_id])
+					if team.students.include?(@student)
+						team.students.delete(@student)
+						@student.team_id = nil
+						if team.students.empty?
+							Team.destroy(team.id)
+						elsif team.point_of_contact == @student
+							team.point_of_contact = team.students.first
+							team.point_of_contact_id = team.student.first.id
+						end
+					end
+				end
         format.html { redirect_to @student, notice: 'Student was successfully updated.' }
         format.json { head :no_content }
       else
