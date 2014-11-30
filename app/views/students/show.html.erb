@@ -94,16 +94,87 @@
 				</a>
 			</div>
 			
+		<% current_contracts = JoinTeamContract.where(:team_id => team.id, :team_accepted => false, :student_accepted => true) %> 
+		<% if !current_contracts.nil? and current_contracts.length > 0 %>
+			<div class="row">
+				<div class="col col-md-6">
+					<div class="list-group">
+						<a href="#" class="list-group-item">
+							<div class="row">
+								<div class="col-md-6">
+									<h4 class="list-group-item-heading">Current Team Members</h4>
+									<p class="list-group-item-text">
+										<ul>
+										<% team_members = Student.where(team_id: @student.team_id) %> 
+										<% team_members.each do |t| %>
+											<li><%= t.full_name %></li>
+										<% end %>
+										</ul>
+									</p>
+								</div>
+								<div class="col-md-6">
+									<button type="button" class="btn btn-default" data-toggle="modal" data-target="" style="float:right">
+										Edit
+									</button>
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="col col-md-6">
+					<div class="list-group">
+						<a href="#" class="list-group-item">
+							<div class="row">
+								<div class="col col-md-12">
+									<h4 class="list-group-item-heading">Potential Team Members</h4>
+									<p class="list-group-item-text">
+										<table class="table" width="100%">
+											<thead>
+												<tr>
+													<th width="30%">Name</th>
+													<th width="30%">Email</th>
+													<th width="20%">Link</th>
+													<th width="20%">Accept</th>
+												</tr>
+											</thead>
+											<tbody>
+											<% current_contracts.each do |contract| %>
+												<% potential_student = Student.find_by_id(contract.student_id) %>
+												<tr>
+													<td><%= potential_student.full_name %></td>
+													<td><%= potential_student.email %></td>
+													<td><%= link_to "Link", student_path(potential_student.id) %></td>			
+													<%= form_for contract do |f| %>
+														<%= f.hidden_field :team_id, value: current_student.team_id %>
+														<%= f.hidden_field :student_id, value: potential_student.id %>
+														<%= f.hidden_field :team_accepted, value: true %>
+														<%= f.hidden_field :student_accepted, value: true %>
+														<div>
+															<td><%= f.submit "Accept", class: "btn btn-sm btn-success" %></td>
+														</div>
+													<% end %>
+												</tr>
+											<% end %>
+											</tbody>
+										</table>
+									</p>
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+		<% else %>
 			<div class="list-group">
 				<a href="#" class="list-group-item">
 					<div class="row">
 						<div class="col-md-6">
-							<h4 class="list-group-item-heading">Team Members</h4>
+							<h4 class="list-group-item-heading">Current Team Members</h4>
 							<p class="list-group-item-text">
 								<ul>
 								<% team_members = Student.where(team_id: @student.team_id) %> 
 								<% team_members.each do |t| %>
-									<li><%= t.first_name + ' ' + t.last_name %></li>
+									<li><%= t.full_name %></li>
 								<% end %>
 								</ul>
 							</p>
@@ -116,7 +187,8 @@
 					</div>
 				</a>
 			</div>
-			
+		<% end %>
+		
 			<div class="list-group">
 				<a href="#" class="list-group-item">
 					<div class="row">
