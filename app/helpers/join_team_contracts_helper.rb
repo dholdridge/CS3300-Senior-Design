@@ -27,7 +27,6 @@ module JoinTeamContractsHelper
   def can_complete_contract?(contract)
     team = Team.find_by(id: contract.team_id)
     student = Student.find_by(id: contract.student_id)
-    STDOUT.puts "IS TEAM FULL? " . full?(team)
     !(on_any_team?(student) || full?(team))
   end
 
