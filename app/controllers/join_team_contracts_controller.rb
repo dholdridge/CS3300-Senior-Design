@@ -36,7 +36,7 @@ class JoinTeamContractsController < ApplicationController
 
     respond_to do |format|
       if @join_team_contract.save
-        format.html { redirect_to (:back), notice: 'Join team contract was successfully created.' }
+        format.html { redirect_to (:back), notice: 'Team join request sent.' }
         format.json { render action: 'show', status: :created, location: @join_team_contract }
       else
         format.html { render action: 'new' }

@@ -84,10 +84,7 @@
 							<th>Point of Contact</th>
 							<th>Number of Members</th>
 							<th>Creation Date</th>
-							<th>Link</th>
-						<% if current_student.team_id.nil? %>
-							<th>Join Team</th>
-						<% end %>
+							<th>View Team</th>
 						</tr>
 					</thead>
 					
@@ -152,10 +149,7 @@
 						<% end %>
 							<td><%= team.students.length %></td>
 							<td><%= team.created_at %></td>
-							<td><a href="/teams/<%=team.id%>" target="_blank">Link</a></td>
-						<% if current_student.team_id.nil? %>
-							<td><%= link_to 'Click to Join', team_path(id: team.id) %></td>
-						<% end %>
+							<td><a href="/teams/<%=team.id%>" target="_blank">View</a></td>
 						</tr>
 					<% end %>
 					</tbody>
