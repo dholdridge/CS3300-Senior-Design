@@ -84,7 +84,7 @@
 							<th>Point of Contact</th>
 							<th>Number of Members</th>
 							<th>Creation Date</th>
-							<th>Link</th>
+							<th>View Team</th>
 						<% if current_student.team_id.nil? %>
 							<th>Join Team</th>
 						<% end %>
@@ -152,7 +152,7 @@
 						<% end %>
 							<td><%= team.students.length %></td>
 							<td><%= team.created_at %></td>
-							<td><a href="/teams/<%=team.id%>" target="_blank">Link</a></td>
+							<td><a href="/teams/<%=team.id%>" target="_blank">View</a></td>
 						<% if current_student.team_id.nil? %>
 							<% current_contract = JoinTeamContract.where(:student_id => current_student.id, 
 										:team_id => team.id, :team_accepted => false, :student_accepted => true).first %>
@@ -179,14 +179,14 @@
 				</p>
 			</div>
 			<div class="tab-pane" id="tab2">
-				<table class="table">
+				<table class="table" width="100%">
 					<thead>
 						<tr>
-							<th>Student Name</th>
-							<th>Email</th>
-							<th>Link</th>
+							<th width="35%">Student Name</th>
+							<th width="35%">Email</th>
+							<th width="15%">View Student Page</th>
 						<% unless current_student.team_id.nil? %>
-							<th>Invite</th>
+							<th width="15%">Invite</th>
 						<% end %>
 						</tr>
 					</thead>
@@ -196,7 +196,7 @@
 							<tr>
 								<td><%= student.full_name %></td>
 								<td><%= student.email %></td>
-								<td><%= link_to 'Link', student_path(id: student.id) %></td>
+								<td><%= link_to 'View', student_path(id: student.id) %></td>
 								<% unless current_student.team_id.nil? %>
 									<% current_contract = JoinTeamContract.where(:student_id => student.id, 
 										:team_id => current_student.team_id, :team_accepted => true, :student_accepted => false).first %>
