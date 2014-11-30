@@ -15,15 +15,23 @@ module StudentsHelper
   end
 
   def request_to_join_team(student, team)
-    if (on_any_team?(student) || full?(team) || contract_exists?(student, team))
+    contract = JoinTeamContract.new
+    contract.team_id = team.id
+    contract.student_id = student.id
+    student_accept(contract)
+    contract.save
+    contract
+  end
+
+  def make_team(student)
+    if (on_any_team?(student))
       nil
     else
-      contract = JoinTeamContract.new
-      contract.team_id = team.id
-      contract.student_id = student.id
-      student_accept(contract)
-      contract.save
-      contract
+      team = Team.create
+      team.students << student
+      student.team_id = team.id
+      team.point_of_contact_id = student.id
+      team
     end
   end
 

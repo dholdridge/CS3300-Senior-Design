@@ -22,8 +22,8 @@ Feature: Joining a Team
 
   Scenario: Student of tries to join a full team
     Given that I am not on a team
-    And a team is full
-    When I try to join a team
+    When the team fills
+    And I try to join a team
     Then the team contract should not be made
 
   Scenario: Student tries to join a team multiple times
@@ -31,3 +31,9 @@ Feature: Joining a Team
     When I try to join a team
     When I try to join a team
     Then the team contract should not be made
+
+  Scenario: Team tries to accept existing contract after filling
+    Given that I am not on a team
+    When I try to join a team
+    And the team fills
+    Then the team contract should not be completeable

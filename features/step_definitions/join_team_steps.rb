@@ -13,17 +13,18 @@ end
 When(/^a team is not full$/) do
 end
 
-When(/^a team is full$/) do
-  @team.students << Student.new
-  @team.students << Student.new
-  @team.students << Student.new
-  @team.students << Student.new
-  @team.students << Student.new
-  @team.students << Student.new
-end
-
 When(/^the team accepts me$/) do
   team_accept(@team_contract)
+end
+
+When(/^the team fills$/) do
+  @team.students << Student.new
+  @team.students << Student.new
+  @team.students << Student.new
+  @team.students << Student.new
+  @team.students << Student.new
+  @team.students << Student.new
+  @team.save
 end
 
 Then(/^I should be a member of a team$/) do
@@ -31,8 +32,8 @@ Then(/^I should be a member of a team$/) do
   assert(@student.team_id == @team.id, @student.team_id)
 end
 
-Then(/^the team contract should not be made$/) do
-  assert(@team_contract.nil?)
+Then(/^the team contract should not be completeable$/) do
+  assert(!can_complete_contract?(@team_contract))
 end
 
 Then(/^the team contract should be made$/) do

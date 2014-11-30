@@ -21,16 +21,4 @@ module SessionsHelper
     make_team(current_student)
   end
 
-  def make_team(student)
-    if (on_any_team?(student))
-      nil
-    else
-      team = Team.create
-      team.students << student
-      student.team_id = team.id
-      team.point_of_contact_id = student.id
-      team
-    end
-  end
-
 end
