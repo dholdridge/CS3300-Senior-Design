@@ -1,31 +1,138 @@
-<h1>Listing bids</h1>
+<style>
+	h2 {
+		font-size: 26px;
+		color: black;
+	}
+	.bid_table_td {
+		position: relative;
+		height: 40px;
+		left: 10px;
+	}
+	.move-up {
+		height: 20px;
+	}
+	.move-down {
+		height: 20px;
+	}
+	.btn span {
+		position: relative;
+		bottom: 5px;
+	}
+</style>
 
-<table>
-  <thead>
-    <tr>
-      <th>Team</th>
-      <th>Project</th>
-      <th>Bid text</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+<% current_team = Team.find_by_id(current_student.team_id) %>
+<div class="row">
+	<div class="col col-md-8">
+		<div class="pull-left">
+			<h2>Available Projects</h2>
+			<div class="panel panel-primary">
+				<div class="panel-body">
+					<table class="table" width="100%">
+						<thead>
+							<tr>
+								<th>Project Name</th>
+								<th>Sponsor</th>
+								<th>No. of Current Bids</th>
+								<th>View Details</th>
+								<th>Place Bid</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<% project_name = "Random Name" %>
+								<td><%= project_name %></td>
+								<td>Random Sponsor</td>
+								<td></td>
+								<td><a href="#">View</a></td>
+								<td>
+									<button 
+										type="button" 
+										class="btn btn-sm btn-default"
+										onclick="place_bid('<%= project_name.html_safe %>', '1');">
+										Bid
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<%= form_for Bid.new do |f| %>
+						<%= f.hidden_field :project_id, id: "bid_form_project_id" %>
+						<%= f.hidden_field :team_id, value: current_student.team_id %>
+						<div style="display: none">
+							<%= f.submit "Submit", id: "bid_form_submit" %>
+						</div>
+					<% end %>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col col-md-4">
+		<div class="pull-left">
+			<h2><%= current_team.name %>&rsquo;s Active Bids</h2>
+			<div class="panel panel-primary">
+				<div class="panel-body">
+					<table class="table" width="100%" class="draggable">
+						<thead>
+							<tr>
+								<th width="5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+								<th width="10%">Priority</th>
+								<th width="40%">Project Name</th>
+								<th width="35%">Sponsor</th>
+								<th width="10%">View Details</th>
+							</tr>
+						</thead>
+						<tbody>
+						<% bid_count = 1 %>
+						<% current_team.bids.each do |bid| %>
+							<tr>
+								<td class="bid_table_td">
+									<div class="row">
+										<button class="btn btn-sm btn-default move-up"><span>&#x25B2;</span></button>
+									</div>
+									<div class="row" >
+										<button class="btn btn-sm btn-default move-down"><span>&#x25BC;</span></button>
+									</div>
+								</td>
+								<td><%= bid_count %></td>
+								<td>Project id: <%= bid.project_id %></td>
+								<td>Random Sponsor</td>
+								<td><a href="#">View</a></td>
+							</tr>
+							<% bid_count = bid_count + 1 %>
+						<% end %>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
-  <tbody>
-    <% @bids.each do |bid| %>
-      <tr>
-        <td><%= bid.team_id %></td>
-        <td><%= bid.project_id %></td>
-        <td><%= bid.bid_text %></td>
-        <td><%= link_to 'Show', bid %></td>
-        <td><%= link_to 'Edit', edit_bid_path(bid) %></td>
-        <td><%= link_to 'Destroy', bid, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<script>
+	$(document).ready(function() {
+		$('table').on('click', '.move-up', function () {
+			var thisRow = $(this).closest('tr');
+			var prevRow = thisRow.prev();
+			if (prevRow.length) {
+					prevRow.before(thisRow);
+			}
+		});
+		
+		$('table').on('click', '.move-down', function () {
+			var thisRow = $(this).closest('tr');
+			var nextRow = thisRow.next();
+			if (nextRow.length) {
+					nextRow.after(thisRow);
+			}
+		});
+	});
 
-<br>
-
-<%= link_to 'New Bid', new_bid_path %>
+	function place_bid(project_name, project_id) {
+		var response = confirm("Are you sure you want to bid on project \'" + project_name + "\'?");
+		if (response) {
+			$("#bid_form_project_id").val(project_id);
+			$("#bid_form_submit").click();
+		}
+	}
+</script>
+		
