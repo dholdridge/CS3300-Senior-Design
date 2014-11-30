@@ -56,7 +56,9 @@
   </div>
 </div>
   
-<% if logged_in? && !on_team?(current_student, @team) %>
+<% if logged_in? &&
+     !on_team?(current_student, @team) &&
+     !contract_exists?(current_student, @team) %>
   <%= form_for request_to_join_team(current_student, @team) do |f| %>
     <%= f.submit "Send Join Request" %>
   <% end %>

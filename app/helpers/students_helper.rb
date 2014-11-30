@@ -1,4 +1,6 @@
 module StudentsHelper
+  include JoinTeamContractsHelper
+
   def on_team?(student, team)
     student.team_id == team.id
   end
@@ -13,7 +15,7 @@ module StudentsHelper
   end
 
   def request_to_join_team(student, team)
-    if (on_any_team?(student) || full?(team))
+    if (on_any_team?(student) || full?(team) || contract_exists?(student, team))
       nil
     else
       contract = JoinTeamContract.new

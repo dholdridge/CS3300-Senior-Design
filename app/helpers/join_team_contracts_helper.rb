@@ -28,4 +28,9 @@ module JoinTeamContractsHelper
     student.save
     team.save
   end
+
+  def contract_exists?(student, team)
+    contract = JoinTeamContract.find_by(student_id: student.id, team_id: team.id)
+    !(contract.nil?)
+  end
 end
