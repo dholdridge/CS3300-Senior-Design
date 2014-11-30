@@ -76,37 +76,36 @@
   <div class="panel-body">
 		<div class="tab-content">
 			<div class="tab-pane active" id="tab1">
-				<table class="table" style="border: 1px solid rgb(221, 221, 221)">
+				<div class="row" style="margin-bottom:20px">
+					<div class="col col-md-1">
+						<div class="btn-group">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+								Sort By <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="#" id="team-name-header">Team Name</a></li>
+								<li><a href="#" id="project-name-header">Project Name</a></li>
+								<li><a href="#" id="poc-name-header">Point of Contact</a></li>
+								<li><a href="#" id="num-members-header">Number of Members</a></li>
+								<li><a href="#" id="creation-date-header">Creation Date</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<table class="table" style="border: 1px solid rgb(221, 221, 221)" width="100%">
 					<thead>
 						<tr>
-							<th>Team Name</th>
-							<th>Project Name</th>
-							<th>Point of Contact</th>
-							<th>Number of Members</th>
-							<th>Creation Date</th>
-							<th>View Team</th>
+							<th width="20%">Team Name</th>
+							<th width="20%">Project Name</th>
+							<th width="15%">Point of Contact</th>
+							<th width="10%">Number of Members</th>
+							<th width="20%">Creation Date</th>
+							<th width="4%">View Team</th>
 						<% if current_student.team_id.nil? %>
-							<th>Join Team</th>
+							<th width="11%">Join Team</th>
 						<% end %>
 						</tr>
 					</thead>
-					
-					<div class="row" style="margin-bottom:20px">
-						<div class="col col-md-1">
-							<div class="btn-group">
-								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-									Sort By <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu" role="menu">
-									<li><a href="#" id="team-name-header">Team Name</a></li>
-									<li><a href="#" id="project-name-header">Project Name</a></li>
-									<li><a href="#" id="poc-name-header">Point of Contact</a></li>
-									<li><a href="#" id="num-members-header">Number of Members</a></li>
-									<li><a href="#" id="creation-date-header">Creation Date</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
 					<tbody>
 					<% if sort_method.nil? or sort_method == "team_name" %>
 						<% @teams.sort! { |a,b| a.name <=> b.name } %>
@@ -158,12 +157,12 @@
 										:team_id => team.id, :team_accepted => false, :student_accepted => true).first %>
 							<% if current_contract.nil? %>
 								<% form_id = "request_join_form_" + team.id.to_s %>
-								<%= form_for JoinTeamContract.new, id: form_id do |f| %>
+								<%= form_for JoinTeamContract.new, :html => { :id => form_id } do |f| %>
 									<%= f.hidden_field :team_id, value: team.id %>
 									<%= f.hidden_field :student_id, value: current_student.id %>
 									<%= f.hidden_field :team_accepted, value: false %>
 									<%= f.hidden_field :student_accepted, value: true %>
-									<td width="10%"><%= f.submit "Request Invite", class: "btn btn-sm btn-default", confirm: "Are you sure you want to join the team '" + team.name + "'?" %></td>
+									<td width="10%"><%= f.submit "Request Invite", class: "btn btn-sm btn-default" %></td>
 								<% end %>
 							<% else %>
 								<td width="10%">Request Sent <strong>*</strong></td>
@@ -216,15 +215,6 @@
 									<% end %>
 								<% end %>
 							</tr>
-						<% end %>
-						<%= form_for JoinTeamContract.new, id: "send_invite_form" do |f| %>
-							<%= f.hidden_field :team_id, value: current_student.team_id %>
-							<%= f.hidden_field :student_id, id: "send_invite_student_id" %>
-							<%= f.hidden_field :team_accepted, value: true %>
-							<%= f.hidden_field :student_accepted, value: false %>
-							<div style="display:none">
-								<%= f.submit "Invite", id: "send_invite_form_submit" %>
-							</div>
 						<% end %>
 					</tbody>
 				</table>
