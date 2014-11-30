@@ -1,42 +1,42 @@
 <style>
-/*Panel tabs*/
-.panel-tabs {
-    position: relative;
-    bottom: 30px;
-    clear:both;
-    border-bottom: 1px solid transparent;
-}
+	/*Panel tabs*/
+	.panel-tabs {
+			position: relative;
+			bottom: 30px;
+			clear:both;
+			border-bottom: 1px solid transparent;
+	}
 
-.panel-tabs > li {
-    float: left;
-    margin-bottom: -1px;
-}
+	.panel-tabs > li {
+			float: left;
+			margin-bottom: -1px;
+	}
 
-.panel-tabs > li > a {
-    margin-right: 2px;
-    margin-top: 5px;
-    line-height: .85;
-    border: 1px solid transparent;
-    border-radius: 4px 4px 0 0;
-    color: #ffffff;
-}
+	.panel-tabs > li > a {
+			margin-right: 2px;
+			margin-top: 5px;
+			line-height: .85;
+			border: 1px solid transparent;
+			border-radius: 4px 4px 0 0;
+			color: #ffffff;
+	}
 
-.panel-tabs > li > a:hover {
-    border-color: transparent;
-    color: #ffffff;
-    background-color: transparent;
-}
+	.panel-tabs > li > a:hover {
+			border-color: transparent;
+			color: #ffffff;
+			background-color: transparent;
+	}
 
-.panel-tabs > li.active > a,
-.panel-tabs > li.active > a:hover,
-.panel-tabs > li.active > a:focus {
-    color: #fff;
-    cursor: default;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    background-color: rgba(255,255,255, .23);
-    border-bottom-color: transparent;
+	.panel-tabs > li.active > a,
+	.panel-tabs > li.active > a:hover,
+	.panel-tabs > li.active > a:focus {
+			color: #fff;
+			cursor: default;
+			-webkit-border-radius: 2px;
+			-moz-border-radius: 2px;
+			border-radius: 2px;
+			background-color: rgba(255,255,255, .23);
+			border-bottom-color: transparent;
 </style>
 
 <!--Parses the query string available in the html bar-->
@@ -154,12 +154,29 @@
 							<td><%= team.created_at %></td>
 							<td><a href="/teams/<%=team.id%>" target="_blank">Link</a></td>
 						<% if current_student.team_id.nil? %>
-							<td><%= link_to 'Click to Join', team_path(id: team.id) %></td>
+							<% current_contract = JoinTeamContract.where(:student_id => current_student.id, 
+										:team_id => team.id, :team_accepted => false, :student_accepted => true).first %>
+							<% if current_contract.nil? %>
+								<% form_id = "request_join_form_" + team.id.to_s %>
+								<%= form_for JoinTeamContract.new, id: form_id do |f| %>
+									<%= f.hidden_field :team_id, value: team.id %>
+									<%= f.hidden_field :student_id, value: current_student.id %>
+									<%= f.hidden_field :team_accepted, value: false %>
+									<%= f.hidden_field :student_accepted, value: true %>
+									<td width="10%"><%= f.submit "Request Invite", class: "btn btn-sm btn-default", confirm: "Are you sure you want to join the team '" + team.name + "'?" %></td>
+								<% end %>
+							<% else %>
+								<td width="10%">Request Sent <strong>*</strong></td>
+							<% end %>
 						<% end %>
 						</tr>
 					<% end %>
 					</tbody>
 				</table>
+				<p>
+					<hr />
+					<strong>*</strong> The team to which you sent the invitation request must first accept your invitation before you officially join the team.
+				</p>
 			</div>
 			<div class="tab-pane" id="tab2">
 				<table class="table">
@@ -168,7 +185,9 @@
 							<th>Student Name</th>
 							<th>Email</th>
 							<th>Link</th>
+						<% unless current_student.team_id.nil? %>
 							<th>Invite</th>
+						<% end %>
 						</tr>
 					</thead>
 					<tbody>
@@ -179,42 +198,40 @@
 								<td><%= student.email %></td>
 								<td><%= link_to 'Link', student_path(id: student.id) %></td>
 								<% unless current_student.team_id.nil? %>
-									<% current_contract = JoinTeamContract.where(:student_id => student.id, :team_id => current_student.team_id).first %>
+									<% current_contract = JoinTeamContract.where(:student_id => student.id, 
+										:team_id => current_student.team_id, :team_accepted => true, :student_accepted => false).first %>
 									<% if current_contract.nil? %>
-										<td>
-											<button type="button" 
-															onclick="send_invite_to('<%= student.full_name.html_safe %>', '<%= student.id.to_s.html_safe %>');"
-															class="btn btn-sm btn-default" style="width: 100%">
-															Invite
-											</button>
-										</td>
-									<% else %>
-										<%= form_for current_contract do |f| %>
+										<% form_id = "send_invite_form_" + student.id.to_s %>
+										<%= form_for JoinTeamContract.new, id: form_id do |f| %>
 											<%= f.hidden_field :team_id, value: current_student.team_id %>
 											<%= f.hidden_field :student_id, value: student.id %>
 											<%= f.hidden_field :team_accepted, value: true %>
 											<%= f.hidden_field :student_accepted, value: false %>
-											<div style="display:inline-block; float:right">
-												<td><%= f.submit "Invite", :confirm => "Are you sure you want to invite " + student.full_name + " to join your team?", :class => "btn btn-sm btn-default" %></td>
-											</div>
+											<td width="20%">
+												<%= f.submit "Send Invite", class: "btn btn-sm btn-default", confirm: "Are you sure you want to invite " + student.full_name + " to your team?" %>
+											</td>
 										<% end %>
+									<% else %>
+										<td>Already Invited <strong>*</strong></td>
 									<% end %>
-								<% else %>
-									<td></td>
 								<% end %>
 							</tr>
 						<% end %>
-						<%= form_for JoinTeamContract.new do |f| %>
+						<%= form_for JoinTeamContract.new, id: "send_invite_form" do |f| %>
 							<%= f.hidden_field :team_id, value: current_student.team_id %>
-							<%= f.hidden_field :student_id, id: "new_jtc_student_id" %>
+							<%= f.hidden_field :student_id, id: "send_invite_student_id" %>
 							<%= f.hidden_field :team_accepted, value: true %>
 							<%= f.hidden_field :student_accepted, value: false %>
 							<div style="display:none">
-								<%= f.submit "Invite", id: "new_jtc_form_submit" %>
+								<%= f.submit "Invite", id: "send_invite_form_submit" %>
 							</div>
 						<% end %>
 					</tbody>
 				</table>
+				<p>
+					<hr />
+					<strong>*</strong> The student has already been extended an invitation by someone in your team. 
+				</p>
 			</div>
 		</div>
   </div>
@@ -259,12 +276,4 @@
 			$(this).popover('hide');
 		});
 	});
-	
-	function send_invite_to(name, id) {
-		var response = confirm('Are you sure you want to invite ' + name + ' to join your team?');
-		if (response) {
-			$('#new_jtc_student_id').val(id);
-			$('#new_jtc_form_submit').click();
-		}
-	}
 </script>
