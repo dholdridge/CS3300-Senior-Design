@@ -1,4 +1,5 @@
 module SessionsHelper
+  include StudentsHelper
   def login(student)
     session[:student_id] = student.id
   end
@@ -15,4 +16,9 @@ module SessionsHelper
   def logged_in?
     !current_student.nil?
   end
+
+  def make_new_team
+    make_team(current_student)
+  end
+
 end

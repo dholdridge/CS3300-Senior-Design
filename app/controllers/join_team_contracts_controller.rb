@@ -36,7 +36,7 @@ class JoinTeamContractsController < ApplicationController
 
     respond_to do |format|
       if @join_team_contract.save
-        format.html { redirect_to (:back), notice: 'Join team contract was successfully created.' }
+        format.html { redirect_to (:back), notice: 'Team join request sent.' }
         format.json { render action: 'show', status: :created, location: @join_team_contract }
       else
         format.html { render action: 'new' }
@@ -50,9 +50,9 @@ class JoinTeamContractsController < ApplicationController
   def update
     respond_to do |format|
       if @join_team_contract.update(join_team_contract_params)
-				if @join_team_contract.team_accepted and @join_team_contract.student_accepted
-					finalize_contract
-				end
+        if @join_team_contract.team_accepted and @join_team_contract.student_accepted
+          finalize_contract
+        end
         format.html { redirect_to (:back), notice: 'Join team contract was successfully updated.' }
         format.json { head :no_content }
       else
@@ -73,13 +73,13 @@ class JoinTeamContractsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_join_team_contract
-      @join_team_contract = JoinTeamContract.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_join_team_contract
+    @join_team_contract = JoinTeamContract.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def join_team_contract_params
-      params.require(:join_team_contract).permit(:team_id, :student_id, :team_accepted, :student_accepted)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def join_team_contract_params
+		params.require(:join_team_contract).permit(:team_id, :student_id, :team_accepted, :student_accepted)
+  end
 end
