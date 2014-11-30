@@ -35,4 +35,15 @@ module StudentsHelper
     end
   end
 
+  def make_bid(student)
+    if (on_any_team?(student))
+      bid = Bid.create
+      student.team.bids << bid
+      student.team.save
+      bid
+    else
+      nil
+    end
+  end
+
 end
