@@ -1,15 +1,15 @@
 class JoinTeamContractsController < ApplicationController
   before_action :set_join_team_contract, only: [:show, :edit, :update, :destroy]
-	helper_method :finalize_contract
-	
-	def finalize_contract
-		team_to_join = Team.find_by_id(@join_team_contract.team_id)
-		student = Student.find_by_id(@join_team_contract.student_id)
-		team_to_join.students.push(student)
-		student.team_id = team_to_join.id
-		JoinTeamContract.destroy_all(:student_id => student.id)
-	end
-	
+  helper_method :finalize_contract
+
+  def finalize_contract
+    team_to_join = Team.find_by_id(@join_team_contract.team_id)
+    student = Student.find_by_id(@join_team_contract.student_id)
+    team_to_join.students.push(student)
+    student.team_id = team_to_join.id
+    JoinTeamContract.destroy_all(:student_id => student.id)
+  end
+
   # GET /join_team_contracts
   # GET /join_team_contracts.json
   def index
@@ -50,9 +50,9 @@ class JoinTeamContractsController < ApplicationController
   def update
     respond_to do |format|
       if @join_team_contract.update(join_team_contract_params)
-				if @join_team_contract.team_accepted and @join_team_contract.student_accepted
-					finalize_contract
-				end
+        if @join_team_contract.team_accepted and @join_team_contract.student_accepted
+          finalize_contract
+        end
         format.html { redirect_to (:back), notice: 'Join team contract was successfully updated.' }
         format.json { head :no_content }
       else
@@ -73,13 +73,12 @@ class JoinTeamContractsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_join_team_contract
-      @join_team_contract = JoinTeamContract.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_join_team_contract
+    @join_team_contract = JoinTeamContract.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def join_team_contract_params
-      params.require(:join_team_contract).permit(:team_id, :student_id, :team_accepted, :student_accepted)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def join_team_contract_params
+  end
 end
