@@ -44,11 +44,13 @@
 		<div class="list-group">
 			<a href="#" class="list-group-item">
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col col-md-6">
 						<h4 class="list-group-item-heading">Interests</h4>
-						<p class="list-group-item-text">
-							<%= simple_format(@student.interests) %>
-						</p>
+						<div class="col col-md-offset-1">
+							<p class="list-group-item-text">
+								<%= simple_format(@student.interests) %>
+							</p>
+						</div>
 					</div>
 					<div class="col-md-6">
 						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-interests-modal" style="float:right">
@@ -133,7 +135,7 @@
 												<tr>
 													<th width="30%">Name</th>
 													<th width="30%">Email</th>
-													<th width="20%">Link</th>
+													<th width="20%">View Page</th>
 													<th width="20%">Accept</th>
 												</tr>
 											</thead>
@@ -143,7 +145,7 @@
 												<tr>
 													<td><%= potential_student.full_name %></td>
 													<td><%= potential_student.email %></td>
-													<td><%= link_to "Link", student_path(potential_student.id) %></td>			
+													<td><%= link_to "View", student_path(potential_student.id) %></td>			
 													<%= form_for contract do |f| %>
 														<%= f.hidden_field :team_id, value: current_student.team_id %>
 														<%= f.hidden_field :student_id, value: potential_student.id %>
@@ -316,7 +318,7 @@
 							<%= f.hidden_field :student_id, value: @student.id %>
 							<%= f.hidden_field :team_accepted, value: true %>
 							<%= f.hidden_field :student_accepted, value: true %>
-							<td><%= f.submit "Join Team" %></td>
+							<td><%= f.submit "Join Team", class: "btn btn-sm btn-default" %></td>
 						<% end %>
 					</tr>
 				<% end %>

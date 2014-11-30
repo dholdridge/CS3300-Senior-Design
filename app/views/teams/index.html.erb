@@ -156,14 +156,12 @@
 							<% current_contract = JoinTeamContract.where(:student_id => current_student.id, 
 										:team_id => team.id, :team_accepted => false, :student_accepted => true).first %>
 							<% if current_contract.nil? %>
-								<% form_id = "request_join_form_" + team.id.to_s %>
-								<%= form_for JoinTeamContract.new, :html => { :id => form_id } do |f| %>
-									<%= f.hidden_field :team_id, value: team.id %>
-									<%= f.hidden_field :student_id, value: current_student.id %>
-									<%= f.hidden_field :team_accepted, value: false %>
-									<%= f.hidden_field :student_accepted, value: true %>
-									<td width="10%"><%= f.submit "Request Invite", class: "btn btn-sm btn-default" %></td>
-								<% end %>
+								<td>
+									<button type="button" class="btn btn-sm btn-default" 
+										onclick="request_invite_from('<%= team.name.html_safe %>', '<%= team.id.to_s.html_safe %>');">
+										Request Invite
+									</button>
+								</td>
 							<% else %>
 								<td width="10%">Request Sent <strong>*</strong></td>
 							<% end %>
@@ -172,6 +170,15 @@
 					<% end %>
 					</tbody>
 				</table>
+				<%= form_for JoinTeamContract.new, :html => { :id => "request_invite_form" } do |f| %>
+					<%= f.hidden_field :team_id, id: "request_invite_team_id" %>
+					<%= f.hidden_field :student_id, value: current_student.id %>
+					<%= f.hidden_field :team_accepted, value: false %>
+					<%= f.hidden_field :student_accepted, value: true %>
+					<div style="display: none">
+						<%= f.submit "Request Invite", id: "request_invite_form_submit" %>
+					</div>
+				<% end %>
 				<p>
 					<hr />
 					<strong>*</strong> The team to which you sent the invitation request must first accept your invitation before you officially join the team.
@@ -200,16 +207,14 @@
 									<% current_contract = JoinTeamContract.where(:student_id => student.id, 
 										:team_id => current_student.team_id, :team_accepted => true, :student_accepted => false).first %>
 									<% if current_contract.nil? %>
-										<% form_id = "send_invite_form_" + student.id.to_s %>
-										<%= form_for JoinTeamContract.new, id: form_id do |f| %>
-											<%= f.hidden_field :team_id, value: current_student.team_id %>
-											<%= f.hidden_field :student_id, value: student.id %>
-											<%= f.hidden_field :team_accepted, value: true %>
-											<%= f.hidden_field :student_accepted, value: false %>
-											<td width="20%">
-												<%= f.submit "Send Invite", class: "btn btn-sm btn-default", confirm: "Are you sure you want to invite " + student.full_name + " to your team?" %>
-											</td>
-										<% end %>
+										<td width="20%">
+											<button 
+												type="button"
+												class="btn btn-sm btn-default"
+												onclick="send_invite_to('<%= student.full_name.html_safe %>', '<%= student.id.to_s.html_safe %>');">
+												Send Invite
+											</button>
+										</td>
 									<% else %>
 										<td>Already Invited <strong>*</strong></td>
 									<% end %>
@@ -218,6 +223,15 @@
 						<% end %>
 					</tbody>
 				</table>
+				<%= form_for JoinTeamContract.new, :html => { :id => "send_invite_form" } do |f| %>
+					<%= f.hidden_field :team_id, value: current_student.team_id %>
+					<%= f.hidden_field :student_id, id: "send_invite_student_id" %>
+					<%= f.hidden_field :team_accepted, value: true %>
+					<%= f.hidden_field :student_accepted, value: false %>
+					<div style="display: none">
+						<%= f.submit "Send Invite", id: "send_invite_form_submit" %>
+					</div>
+				<% end %>
 				<p>
 					<hr />
 					<strong>*</strong> The student has already been extended an invitation by someone in your team. 
@@ -266,4 +280,22 @@
 			$(this).popover('hide');
 		});
 	});
+	
+	function request_invite_from(team_name, team_id) {
+		var response = confirm("Are you sure you want to join the team \'" + team_name + "\'?\n\n" +
+		"Note that you must first wait for the team to accept your request before becoming a member.");
+		if (response) {
+			$("#request_invite_team_id").val(team_id);
+			$("#request_invite_form_submit").click();
+		}
+	}
+	
+	function send_invite_to(student_name, student_id) {
+		var response = confirm("Are you sure you want to invite " + student_name + " to your team?\n\n" +
+		"Note that the student must first accept your invitation before joining your team.");
+		if (response) {
+			$("#send_invite_student_id").val(student_id);
+			$("#send_invite_form_submit").click();
+		}
+	}
 </script>
