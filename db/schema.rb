@@ -22,29 +22,6 @@ ActiveRecord::Schema.define(version: 20141201070331) do
     t.integer  "priority"
   end
 
-  create_table "projects", force: true do |t|
-    t.string   "company_name"
-    t.string   "company_technical_name"
-    t.string   "company_technical_designation"
-    t.string   "company_technical_email"
-    t.string   "company_technical_phone"
-    t.string   "company_director_name"
-    t.string   "company_director_designation"
-    t.string   "company_director_email"
-    t.string   "company_director_phone"
-    t.string   "name"
-    t.string   "background"
-    t.string   "concept"
-    t.string   "design"
-    t.string   "skills"
-    t.string   "solutions"
-    t.boolean  "nda_required"
-    t.boolean  "funding_commitment"
-    t.boolean  "company_email_conf"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "join_team_contracts", force: true do |t|
     t.integer  "team_id"
     t.integer  "student_id"
@@ -58,6 +35,29 @@ ActiveRecord::Schema.define(version: 20141201070331) do
     t.string   "first_name"
     t.string   "last_name"
     t.integer  "class_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "projects", force: true do |t|
+    t.string   "project_company_name"
+    t.string   "project_company_technical_name"
+    t.string   "project_company_technical_designation"
+    t.string   "project_company_technical_email"
+    t.string   "project_company_technical_phone"
+    t.string   "project_company_director_name"
+    t.string   "project_company_director_designation"
+    t.string   "project_company_director_email"
+    t.string   "project_company_director_phone"
+    t.string   "project_name"
+    t.string   "project_background"
+    t.string   "project_concept"
+    t.string   "project_design"
+    t.string   "project_skills"
+    t.string   "project_solutions"
+    t.boolean  "project_nda_required"
+    t.boolean  "project_funding_commitment"
+    t.boolean  "project_company_email_conf"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
