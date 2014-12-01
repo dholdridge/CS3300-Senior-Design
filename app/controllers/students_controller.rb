@@ -42,6 +42,7 @@ class StudentsController < ApplicationController
   def update
     respond_to do |format|
       if @student.update(student_params)
+				@student.team_sort_method = "team_name"
         format.html { redirect_to @student, notice: 'Student was successfully updated.' }
         format.json { head :no_content }
       else
@@ -69,6 +70,6 @@ class StudentsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def student_params
-      params.require(:student).permit(:first_name, :last_name, :team_id, :email, :interests)
+      params.require(:student).permit(:first_name, :last_name, :team_id, :email, :interests, :team_sort_method)
     end
 end

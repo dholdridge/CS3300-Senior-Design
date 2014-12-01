@@ -46,7 +46,7 @@
 				<div class="col col-md-4">
 					<div style="display:inline-block; float:left">
 					<%= form_for @current_student, id: "sort-method-form" do |f| %>
-						<!--<%= f.hidden_field :full_name, id: "hidden-sort-method" %>-->
+						<%= f.hidden_field :team_sort_method, :value => "team_name" %>
 						<%= f.submit "Sort", :class => "btn btn-default" %>
 					<% end %>
 					</div>
