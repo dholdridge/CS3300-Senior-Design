@@ -28,6 +28,7 @@ SeniorDesignSite::Application.routes.draw do
     collection { post :import }
   end
   resources :teams
+  resources :projects
 
   root 'static_pages#home'
 end
