@@ -43,6 +43,13 @@ class BidsController < ApplicationController
   def update
     respond_to do |format|
       if @bid.update(bid_params)
+				if bid_params.length == 1 and bid_params.has_key?(:priority)
+					@bid.priority = bid_params[:priority]
+					current_team = Team.find_by_id(current_student.team_id)
+					new_bid_idx = current_team.bids.find_index {|item| item.id == @bid.id}
+					current_team.bids[new_bid_idx].priority = @bid.priority
+					
+				end
         format.html { redirect_to (:back), notice: 'Bid was successfully updated.' }
         format.json { head :no_content }
       else
@@ -70,6 +77,6 @@ class BidsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def bid_params
-      params.require(:bid).permit(:team_id, :project_id, :bid_text)
+      params.require(:bid).permit(:team_id, :project_id, :bid_text, :priority)
     end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141118232636) do
+ActiveRecord::Schema.define(version: 20141201070331) do
 
   create_table "bids", force: true do |t|
     t.integer  "team_id"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20141118232636) do
     t.text     "bid_text"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "priority"
   end
 
   create_table "join_team_contracts", force: true do |t|

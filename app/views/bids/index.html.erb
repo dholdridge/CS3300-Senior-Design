@@ -19,7 +19,7 @@
 		bottom: 5px;
 	}
 	.dragging {
-		color: white;
+		color: white !important;
 		background-color: #337AB7 !important;
 	}
 </style>
@@ -29,9 +29,11 @@
 <script type="text/javascript">
 	$(init);
 
+	var old_index;
 	function init() {
 		var fixHelperModified = function(e, tr) {
 			tr.addClass("dragging");
+			old_index = $("#sort tr").index(tr);
 			var $originals = tr.children();
 			var $helper = tr.clone();
 			$helper.children().each(function(index) {
@@ -41,14 +43,23 @@
 		},
 			updateIndex = function(e, ui) {
 				$('td.index', ui.item.parent()).each(function (i) {
-						$(this).html(i + 1);
+						//$(this).html(i + 1);
 						$tr = $(this).parent();
 						if ($tr.hasClass("dragging")) {
 							$tr.fadeIn(100).fadeOut(300).fadeIn(300);
 							$tr.removeClass("dragging");
+							var new_priority = i + 1;
+							edit_bid_priority(new_priority);
 						}
 				});
 			};
+			
+		function edit_bid_priority(new_priority) {		
+			var form_priority_name = "#edit_bid_form_priority_" + old_index;
+			var form_submit_name = "#edit_bid_form_submit_" + old_index;
+			$(form_priority_name).val(new_priority);
+			$(form_submit_name).click();
+		}
 
 		$("#sort tbody").sortable({
 				helper: fixHelperModified,
@@ -104,6 +115,7 @@
 					<%= form_for Bid.new do |f| %>
 						<%= f.hidden_field :project_id, id: "bid_form_project_id" %>
 						<%= f.hidden_field :team_id, value: current_student.team_id %>
+						<%= f.hidden_field :priority, value: (Team.find(current_student.team_id).bids.length + 1) %>
 						<div style="display: none">
 							<%= f.submit "Submit", id: "bid_form_submit" %>
 						</div>
@@ -129,13 +141,19 @@
 							</thead>
 							<tbody>
 							<% bid_count = 1 %>
-							<% current_team.bids.each do |bid| %>
+							<% current_team.bids.order("priority").each do |bid| %>
 								<tr>
-									<td class="index"><%= bid_count %></td>
+									<td class="index"><%= bid.priority %></td>
 									<td>Project id: <%= bid.project_id %></td>
 									<td>Random Sponsor <%= bid_count %></td>
-									<td><a href="#">View</a></td>
+									<td><%= link_to "View", bid_path(bid.id) %></td>
 								</tr>
+								<%= form_for bid, class: "edit_bid" do |f| %>
+									<%= f.hidden_field :priority, class: "edit_bid_form_priority", id: "edit_bid_form_priority_" + bid_count.to_s %>
+									<div style="display: none">
+										<%= f.submit "Submit", id: "edit_bid_form_submit_" + bid_count.to_s %>
+									</div>
+								<% end %>
 								<% bid_count = bid_count + 1 %>
 							<% end %>
 							</tbody>
