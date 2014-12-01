@@ -1,6 +1,8 @@
 SeniorDesignSite::Application.routes.draw do
   get "projects/new"
   get "static_pages/home"
+  get "uploads/index"
+  get "uploads/uploadFile"
   resources :students
   resources :teams
 
@@ -20,10 +22,13 @@ SeniorDesignSite::Application.routes.draw do
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
-
+  
+  resources :professors
   resources :bids
-  resources :students
+  resources :students do
+    collection { post :import }
+  end
   resources :teams
 
-  root 'sessions#new'
+  root 'static_pages#home'
 end
