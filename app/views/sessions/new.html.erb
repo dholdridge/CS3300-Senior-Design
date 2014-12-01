@@ -1,0 +1,61 @@
+<h1>Log in</h1>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <table>
+    	<tr>
+			<%= form_for(:session, url: login_path) do |f| %>
+				<%= f.label :first_name %>
+				<%= f.text_field :first_name, class: 'form-control' %>
+				<%= f.label :last_name %>
+				<%= f.text_field :last_name, class: 'form-control' %>
+    		<td>
+    			<div class = ButtonLeft>
+						<%= f.submit "Log in", class: "btn btn-primary" %>
+					</div>
+    		</td>
+			<% end %>
+    		<td>
+    			<button class="btn btn-primary" data-toggle="modal" data-target="#new-student-modal">Create New</button>
+    		</td>
+    	</tr>
+    </table>     
+  </div>
+</div>
+
+<div class="modal fade" id="new-student-modal" tabindex="-1" role="dialog" aria-labelledby="new-student-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Create New Student</h4>
+      </div>
+		<%= form_for Student.new do |f| %>
+			<div class="modal-body">
+				<%= f.label :first_name %>:
+				<%= f.text_field :first_name, :class => "form-control" %>
+				<%= f.label :last_name %>:
+				<%= f.text_field :last_name, :class => "form-control" %>
+				<%= f.label :email %>:
+				<%= f.text_field :email, :class => "form-control" %>
+				<%= f.label :interests %>:
+				<%= f.text_area :interests, :size => "40x10", :class => "form-control" %><br />
+			</div>
+			<div class="modal-footer">
+				<div class="row">
+					<div class="col col-md-6">
+						<div style="display:inline-block; float:left">
+						<%= f.submit "Create", :class => "btn btn-primary" %>
+						</div>
+					</div>
+					<div class="col col-md-6">
+						<div style="display:inline-block; float:right">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		<% end %>
+    </div>
+  </div>
+</div>

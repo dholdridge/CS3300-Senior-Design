@@ -16,4 +16,3 @@ Feature: Creating a Team
     Given that I am on a team
     When I try to create a new team
     Then the new team should not be created
-    And I should receive an error

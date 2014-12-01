@@ -1,0 +1,33 @@
+<h1>Listing join_team_contracts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Team</th>
+      <th>Student</th>
+      <th>Team accepted</th>
+      <th>Student accepted</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @join_team_contracts.each do |join_team_contract| %>
+      <tr>
+        <td><%= join_team_contract.team_id %></td>
+        <td><%= join_team_contract.student_id %></td>
+        <td><%= join_team_contract.team_accepted %></td>
+        <td><%= join_team_contract.student_accepted %></td>
+        <td><%= link_to 'Show', join_team_contract %></td>
+        <td><%= link_to 'Edit', edit_join_team_contract_path(join_team_contract) %></td>
+        <td><%= link_to 'Destroy', join_team_contract, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Join team contract', new_join_team_contract_path %>
