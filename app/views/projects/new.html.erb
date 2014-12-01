@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+<div id="wrap" class="container">
+	<div class="row-fluid">
+		<div class="span12">
+			<h1>Submit a New Project</h1>
+			<br>
+			<div class="span12">
+				Complete the form below to submit a project. Please <strong> DO NOT</strong> include any proprietary or confidential information.
+			<br>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+
+			<form accept-charset="UTF-8" action="/projects" class="simple_form form-horizontal" enctype="multipart/form-data" id="new_project" method="post" novalidate="novalidate">
+				<div class="well">
+					<h3>Company Information</h3>
+					<div class="control-group string optional project_company_name">
+						<label class="string optional control-label" for="project_company_attributes_name">Company Name</label>
+						<div class="controls">
+							<input class="string optional" id="project_company_attributes_name" name="project[company_name]" size="50" type="text">
+						</div>
+					</div>
+					<h5>Technical Contact</h5>
+					<div class="control-group string optional project_company_technical_name">
+						<label class="string optional control-label" for="project_company_attributes_technical_name">Name</label>
+						<div class="controls">
+							<input class="string optional" id="project_company_attributes_technical_name" name="project[company_technical_name]" size="50" type="text">
+						</div>
+					</div>
+					<div class="control-group string optional project_company_technical_designation">
+						<label class="string optional control-label" for="project_company_attributes_technical_designation">Designation</label>
+						<div class="controls">
+							<input class="string optional" id="project_company_attributes_technical_designation" name="project[company_technical_designation]" size="50" type="text">
+						</div>
+					</div>
+					<div class="control-group email optional project_company_technical_email">
+						<label class="email optional control-label" for="project_company_attributes_technical_email">Email</label>
+						<div class="controls">
+							<input class="string email optional" id="project_company_attributes_technical_email" name="project[company_technical_email]" size="50" type="email">
+						</div>
+					</div>
+					<div class="control-group tel optional project_company_technical_name">
+						<label class="tel optional control-label" for="project_company_attributes_technical_name">Phone Number</label>
+						<div class="controls">
+							<input class="string tel optional" id="project_company_attributes_technical_name" name="project[company_technical_name]" size="50" type="tel">
+						</div>
+					</div>
+					<h5>Director Contact</h5>
+					<div class="control-group string optional project_company_director_name">
+						<label class="string optional control-label" for="project_company_attributes_director_name">Name</label>
+						<div class="controls">
+							<input class="string optional" id="project_company_attributes_director_name" name="project[company_director_name]" size="50" type="text">
+						</div>
+					</div>
+					<div class="control-group string optional project_company_director_designation">
+						<label class="string optional control-label" for="project_company_attributes_director_designation">Designation</label>
+						<div class="controls">
+							<input class="string optional" id="project_company_attributes_director_designation" name="project[company_director_designation]" size="50" type="text">
+						</div>
+					</div>
+					<div class="control-group email optional project_company_director_email">
+						<label class="email optional control-label" for="project_company_attributes_director_email">Email</label>
+						<div class="controls">
+							<input class="string email optional" id="project_company_attributes_director_email" name="project[company_director_email]" size="50" type="email">
+						</div>
+					</div>
+					<div class="control-group tel optional project_company_director_name">
+						<label class="tel optional control-label" for="project_company_attributes_director_name">Phone Number</label>
+						<div class="controls">
+							<input class="string tel optional" id="project_company_attributes_director_name" name="project[company_director_name]" size="50" type="tel">
+						</div>
+					</div>
+				</div>
+				<div class="well">
+					<h3>Project Information</h3>
+					<div class="control-group string optional project_name">
+						<label class="string optional control-label" for="project_name">Project Title</label>
+						<div class="controls">
+							<input class="string optional" id="project_name" name="project[name]" size="50" type="text">
+						</div>
+					</div>
+					<div class="control-group text optional project_background">
+						<label class="string optional control-label" for="project_background">Background / Need</label>
+						<div class="controls">
+							<textarea class="text optional" cols="40" id="project_background" name="project[background]" rows="3" style="width: 90%"></textarea>
+						</div>
+					</div>
+					<div class="control-group text optional project_concept">
+						<label class="string optional control-label" for="project_concept">Concept</label>
+						<div class="controls">
+							<textarea class="text optional" cols="40" id="project_concept" name="project[concept]" rows="3" style="width: 90%"></textarea>
+						</div>	
+					</div>
+					<div class="control-group text optional project_design">
+						<label class="string optional control-label" for="project_design">Design Considerations</label>
+						<div class="controls">
+							<textarea class="text optional" cols="40" id="project_design" name="project[design]" rows="3" style="width: 90%"></textarea>
+						</div>
+					</div>
+					<div class="control-group text optional project_skills">
+						<label class="string optional control-label" for="project_skills">Desired Skills</label>
+						<div class="controls">
+							<textarea class="text optional" cols="40" id="project_skills" name="project[skills]" rows="3" style="width: 90%"></textarea>
+						</div>
+					</div>
+					<div class="control-group text optional project_solutions">
+						<label class="string optional control-label" for="project_solutions">Preferred Solution</label>
+						<div class="controls">
+							<textarea class="text optional" cols="40" id="project_solutions" name="project[solutions]" rows="3" style="width: 90%"></textarea>
+						</div>
+					</div>
+					<div class="control-group boolean optional project_nda_required">
+						<div class="controls">
+						<input name="project[nda_required]" type="hidden" value="0">
+						<label class="checkbox">
+							<input class="boolean optional" id="project_nda_required" name="project[nda_required]" type="checkbox" value="1">"NDA Required"
+						</label>
+						</div>
+					</div>
+					<div class="control-group boolean optional project_funding_commitment">
+						<div class="controls">
+						<input name="project[funding_commitment]" type="hidden" value="0">
+						<label class="checkbox">
+							<input class="boolean optional" id="project_funding_commitment" name="project[funding_commitment]" type="checkbox" value="1">
+							Interest in IP Assignment
+						</label>
+						</div>
+					</div>
+					<div class="control-group boolean optional project_company_email_conf">
+						<div class="controls">
+						<input name="project[company_email_conf]" type="hidden" value="0">
+						<label class="checkbox">
+							<input checked="checked" class="boolean optional" id="project_company_attributes_email_conf" name="project[email_conf]" type="checkbox" value="1">"Receive Email Confirmation"
+						</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-actions">
+					<input class="btn btn-primary" name="commit" type="submit" value="Create Project">
+					<a href="/" class="btn btn-link">cancel</a>
+				</div>
+			</form>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+
+</html>
