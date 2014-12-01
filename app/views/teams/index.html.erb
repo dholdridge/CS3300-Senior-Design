@@ -127,8 +127,11 @@
 									team_info += student.full_name + '<br />'
 								end
 							 end 
-							 team_info += '<br />Contact: ' + '<u>' + team.point_of_contact.email + '</u>'
-						%>	
+							 if !team.point_of_contact.nil?
+							 	team_info += '<br />Contact: ' + '<u>' + team.point_of_contact.email + '</u>'
+							 end
+							 
+						%>		
 					
 						<% if current_student.team_id == team.id %>
 						<tr class="alert alert-success table-row" 
