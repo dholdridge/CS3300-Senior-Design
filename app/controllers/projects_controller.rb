@@ -40,22 +40,22 @@ class ProjectsController < ApplicationController
   private
     def project_params
       params.require(:project).permit(
-            :company_name,
-            :company_technical_name,
-            :company_technical_designation,
-            :company_technical_email,
-            :company_director_name,
-            :company_director_designation,
-            :company_director_email,
-            :name,
-            :background,
-            :concept,
-            :design,
-            :skills,
-            :solutions,
-            :nda_required,
-            :funding_commitment,
-            :company_email_conf
+            :project_company_name,
+            :project_company_technical_name,
+            :project_company_technical_designation,
+            :project_company_technical_email,
+            :project_company_director_name,
+            :project_company_director_designation,
+            :project_company_director_email,
+            :project_name,
+            :project_background,
+            :project_concept,
+            :project_design,
+            :project_skills,
+            :project_solutions,
+            :project_nda_required,
+            :project_funding_commitment,
+            :project_company_email_conf
       )
     end
 end
