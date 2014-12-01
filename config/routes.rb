@@ -1,4 +1,5 @@
 SeniorDesignSite::Application.routes.draw do
+  resources :join_team_contracts
   get "projects/new"
   get "static_pages/home"
   get "uploads/index"
