@@ -1,15 +1,12 @@
 <p id="notice"><%= notice %></p>
-<h1><%=  @student.team_sort_method %></h1>
+
 <ul class="nav nav-pills">
 	<li role="presentation" class="active"><a href="#">Home</a></li>
-	<li role="presentation"><a href="#">Find Projects</a></li>
-	<li role="presentation"><a href="../teams">Browse Teams</a></li>
+	<li role="presentation"><a href="../bids">Find Projects</a></li>
+	<li role="presentation"><a href="../teams" data-no-turbolink="true">Browse Teams</a></li>
 	<li role="presentation"><a href="#">Messages</a></li>
 	<li role="presentation">
-		<%= link_to 'Preferences', edit_student_path(@student) %> 
-	</li>
-	<li role="presentation">
-		<%= link_to 'Back', students_path %>
+		<%= link_to 'Back', login_path %>
 	</li>
 </ul><br />
 
@@ -44,11 +41,13 @@
 		<div class="list-group">
 			<a href="#" class="list-group-item">
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col col-md-6">
 						<h4 class="list-group-item-heading">Interests</h4>
-						<p class="list-group-item-text">
-							<%= simple_format(@student.interests) %>
-						</p>
+						<div class="col col-md-offset-1">
+							<p class="list-group-item-text">
+								<%= simple_format(@student.interests) %>
+							</p>
+						</div>
 					</div>
 					<div class="col-md-6">
 						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-interests-modal" style="float:right">
@@ -61,118 +60,280 @@
 	</div>
 </div>
 
-<div class="panel panel-primary">
-	<div class="panel-heading">
-		<h3 class="panel-title">
-			Team Information for
-			<%= @student.first_name %>
-			<%= @student.last_name %>
-		</h3>
+<% team_id = @student.team_id %>
+<% team = Team.find_by(id: team_id) %>
+<% unless team.nil? %>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Team Information for
+					<%= @student.first_name %>
+					<%= @student.last_name %>
+				</h3>
+			</div>
+		</div>
+		
+		<div class="panel-body">
+			<div class="list-group">
+				<a href="#" class="list-group-item">
+					<div class="row">
+						<div class="col-md-6">
+							<h4 class="list-group-item-heading">Team Name</h4>
+							<p class="list-group-item-text">
+								<%= team.name %>
+							</p>
+						</div>
+						<div class="col-md-6">
+							<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-team-name-modal" style="float:right">
+								Edit
+							</button>
+						</div>
+					</div>
+				</a>
+			</div>
+			
+		<% current_contracts = JoinTeamContract.where(:team_id => team.id, :team_accepted => false, :student_accepted => true) %> 
+		<% if !current_contracts.nil? and current_contracts.length > 0 %>
+			<div class="row">
+				<div class="col col-md-6">
+					<div class="list-group">
+						<a href="#" class="list-group-item">
+							<div class="row">
+								<div class="col-md-6">
+									<h4 class="list-group-item-heading">Current Team Members</h4>
+									<p class="list-group-item-text">
+										<ul>
+										<% team_members = Student.where(team_id: @student.team_id) %> 
+										<% team_members.each do |t| %>
+											<li><%= t.full_name %></li>
+										<% end %>
+										</ul>
+									</p>
+								</div>
+								<div class="col-md-6">
+									<button type="button" class="btn btn-default" data-toggle="modal" data-target="" style="float:right">
+										Edit
+									</button>
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="col col-md-6">
+					<div class="list-group">
+						<a href="#" class="list-group-item">
+							<div class="row">
+								<div class="col col-md-12">
+									<h4 class="list-group-item-heading">Potential Team Members</h4>
+									<p class="list-group-item-text">
+										<table class="table" width="100%">
+											<thead>
+												<tr>
+													<th width="30%">Name</th>
+													<th width="30%">Email</th>
+													<th width="20%">View Page</th>
+													<th width="20%">Accept</th>
+												</tr>
+											</thead>
+											<tbody>
+											<% current_contracts.each do |contract| %>
+												<% potential_student = Student.find_by_id(contract.student_id) %>
+												<tr>
+													<td><%= potential_student.full_name %></td>
+													<td><%= potential_student.email %></td>
+													<td><%= link_to "View", student_path(potential_student.id) %></td>			
+													<%= form_for contract do |f| %>
+														<%= f.hidden_field :team_id, value: current_student.team_id %>
+														<%= f.hidden_field :student_id, value: potential_student.id %>
+														<%= f.hidden_field :team_accepted, value: true %>
+														<%= f.hidden_field :student_accepted, value: true %>
+														<div>
+															<td><%= f.submit "Accept", class: "btn btn-sm btn-success" %></td>
+														</div>
+													<% end %>
+												</tr>
+											<% end %>
+											</tbody>
+										</table>
+									</p>
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+		<% else %>
+			<div class="list-group">
+				<a href="#" class="list-group-item">
+					<div class="row">
+						<div class="col-md-6">
+							<h4 class="list-group-item-heading">Current Team Members</h4>
+							<p class="list-group-item-text">
+								<ul>
+								<% team_members = Student.where(team_id: @student.team_id) %> 
+								<% team_members.each do |t| %>
+									<li><%= t.full_name %></li>
+								<% end %>
+								</ul>
+							</p>
+						</div>
+						<div class="col-md-6">
+							<button type="button" class="btn btn-default" data-toggle="modal" data-target="" style="float:right">
+								Edit
+							</button>
+						</div>
+					</div>
+				</a>
+			</div>
+		<% end %>
+		
+			<div class="list-group">
+				<a href="#" class="list-group-item">
+					<div class="row">
+						<div class="col-md-6">
+							<h4 class="list-group-item-heading">Point of Contact</h4>
+							<p class="list-group-item-text">
+							<% point_of_contact = team.point_of_contact %>
+							<% if !point_of_contact.nil? and point_of_contact != current_student %>
+								<strong>Name:</strong> <%= point_of_contact.first_name + ' ' + point_of_contact.last_name %><br />
+								<strong>Email:</strong> <%= point_of_contact.email %>
+							<% else %>
+								You are the team's point of contact.
+							<% end %>
+							</p>
+						</div>
+						<div class="col-md-6">
+						<% if current_student == team.point_of_contact %>
+							<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-team-poc-modal" style="float:right">
+								Edit
+							</button>
+						<% end %>
+						</div>
+					</div>
+				</a>
+			</div>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="panel-title">Actions</h4>
+				</div>
+				<div class="panel-body">
+					<% if logged_in? and !@student.team_id.nil? %>
+						<%= form_for @student do |f| %>
+							<%= f.hidden_field :team_id, :class => "form-control" %>
+							<div style="display:inline-block; float:right">
+						<% if team.students.length == 1 %>
+							<%= f.submit "Leave Team", :class => "btn btn-danger", :confirm => "Are you sure you want to leave you current team?\nAs the last member on your team, your team will be automatically destroyed." %>
+						<% else %>
+							<%= f.submit "Leave Team", :class => "btn btn-danger", :confirm => "Are you sure you want to leave you current team?" %>
+						<% end %>
+							</div><br />
+						<% end %>
+					<% end %>
+				</div>
+			</div>
+		</div>
+	</div>
+<% end %>
+	
+<% if current_student != @student and !current_student.team_id.nil? and @student.team_id.nil? %>
+	<div class="panel panel-success">
+		<div class="panel-heading">
+			<div class="panel-heading">
+				<h4 class="panel-title">Invite <%= @student.full_name %> to Your Team</h4>
+			</div>
+		</div>
+		<div class="panel-body">
+			<p>
+				Sending out an invite will allow this student to become a permanent member of your team.<br />
+				Note that the student must first accept your invitation for them to join your team.
+			</p>
+			<% current_contract = JoinTeamContract.where(:student_id => @student.id, :team_id => current_student.team_id).first %>
+			<% if current_contract.nil? %>
+				<%= form_for JoinTeamContract.new do |f| %>
+					<%= f.hidden_field :team_id, value: current_student.team_id %>
+					<%= f.hidden_field :student_id, value: @student.id %>
+					<%= f.hidden_field :team_accepted, value: true %>
+					<%= f.hidden_field :student_accepted, value: false %>
+					<div style="display:inline-block; float:right">
+						<%= f.submit "Invite", :class => "btn btn-success" %>
+					</div>
+				<% end %>
+			<% else %>
+				<%= form_for current_contract do |f| %>
+					<%= f.hidden_field :team_id, value: current_student.team_id %>
+					<%= f.hidden_field :student_id, value: @student.id %>
+					<%= f.hidden_field :team_accepted, value: true %>
+					<%= f.hidden_field :student_accepted, value: false %>
+					<div style="display:inline-block; float:right">
+						<%= f.submit "Invite", :class => "btn btn-success" %>
+					</div>
+				<% end %>
+			<% end %>
+		</div>
 	</div>
 	
-	<div class="panel-body">
-	<% team_id = @student.team_id %>
-	<% team = Team.find_by(id: team_id) %>
-	<% unless team.nil? %>
-		<div class="list-group">
-			<a href="#" class="list-group-item">
-				<div class="row">
-					<div class="col-md-6">
-						<h4 class="list-group-item-heading">Team Name</h4>
-						<p class="list-group-item-text">
-							<%= team.name %>
-						</p>
-					</div>
-					<div class="col-md-6">
-						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-team-name-modal" style="float:right">
-							Edit
-						</button>
-					</div>
-				</div>
-			</a>
-		</div>
-		
-		<div class="list-group">
-			<a href="#" class="list-group-item">
-				<div class="row">
-					<div class="col-md-6">
-						<h4 class="list-group-item-heading">Team Members</h4>
-						<p class="list-group-item-text">
-							<ul>
-							<% team_members = Student.where(team_id: @student.team_id) %> 
-							<% team_members.each do |t| %>
-								<li><%= t.first_name + ' ' + t.last_name %></li>
-							<% end %>
-							</ul>
-						</p>
-					</div>
-					<div class="col-md-6">
-						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-team-poc-modal" style="float:right">
-							Edit
-						</button>
-					</div>
-				</div>
-			</a>
-		</div>
-		
-		<div class="list-group">
-			<a href="#" class="list-group-item">
-				<div class="row">
-					<div class="col-md-6">
-						<h4 class="list-group-item-heading">Point of Contact</h4>
-						<p class="list-group-item-text">
-						<% point_of_contact = team.point_of_contact %>
-						<% if !point_of_contact.nil? and point_of_contact.id != @student.id %>
-							<strong>Name:</strong> <%= point_of_contact.first_name + ' ' + point_of_contact.last_name %><br />
-							<strong>Email:</strong> <%= point_of_contact.email %>
-						<% else %>
-							You are the team's point of contact.
-						<% end %>
-						</p>
-					</div>
-					<div class="col-md-6">
-					<% if @student.id == team.point_of_contact_id %>
-						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#edit-team-poc-modal" style="float:right">
-							Edit
-						</button>
-					<% end %>
-					</div>
-				</div>
-			</a>
-		</div>
-		
-		<div class="panel panel-default">
+<% elsif current_student == @student and current_student.team_id.nil? %>
+	<div class="panel panel-danger">
+		<div class="panel-heading">
 			<div class="panel-heading">
-				<h4 class="panel-title">Actions</h4>
+				<h4 class="panel-title">Team Search</h4>
 			</div>
-			<div class="panel-body">
-				<% if logged_in? and !@student.team_id.nil? %>
-					<%= form_for @student do |f| %>
-						<!--<%= f.hidden_field :team_id, value: nil, :class => "form-control" %>-->
-						<div style="display:inline-block; float:right">
-						<%= f.submit "Leave Team", :class => "btn btn-danger" %>
-						</div><br />
-					<% end %>
+		</div>
+		<div class="panel-body">
+		<% pending_contracts = JoinTeamContract.where(:student_id => @student.id, :team_accepted => true, :student_accepted => false) %>
+			<p>
+				You are not on a team. <a href="#">Click here to find a team.</a>
+				<% if !pending_contracts.nil? and !pending_contracts.empty? %>
+					Alternatively, accept an invitation from one of the following teams below:<br />
 				<% end %>
+			</p>
+		<% if !pending_contracts.nil? and !pending_contracts.empty? %>
+			<table class="table" width="100%">
+				<thead>
+					<tr>
+						<th width="20%">Team Name</th>
+						<th width="30%">Team Contact</th>
+						<th width="20%">Team Project</th>
+						<th width="10%">Number of Members</th>
+						<th width="10%">Link</th>
+						<th width="10%">Join</th>
+					</tr>
+				</thead>
+				<tbody>
+				<% pending_contracts.each do |contract| %>
+					<tr>
+						<% team = Team.find_by_id(contract.team_id) %>
+						<td><%= team.name %></td>
+						<td><%= team.point_of_contact.full_name %> (<%= team.point_of_contact.email %>)</td>
+						<td>Sample Project Name</td>
+						<td><%= team.students.length %></td>
+						<td><%= link_to 'Link', team_path(id: team.id) %></td>
+						<%= form_for contract do |f| %>
+							<%= f.hidden_field :team_id, value: contract.team_id %>
+							<%= f.hidden_field :student_id, value: @student.id %>
+							<%= f.hidden_field :team_accepted, value: true %>
+							<%= f.hidden_field :student_accepted, value: true %>
+							<td><%= f.submit "Join Team", class: "btn btn-sm btn-default" %></td>
+						<% end %>
+					</tr>
+				<% end %>
+				</tbody>
+			</table>
+		<% end %>
 		</div>
 	</div>
-		
-	<% else %>
-		<div class="alert alert-info" role="alert">
-			You are not on a team. <a href="#">Get on a team.</a>
-		</div>	
-	<% end %>
-	</div>
-</div>
+<% end %>
 
 <div class="panel panel-primary">
 	<div class="panel-heading">
 		<div class="panel-heading">
 			<h3 class="panel-title">
-        Project Information for
-        <%= @student.first_name %>
-        <%= @student.last_name %>
-      </h3>
+				Project Information for
+				<%= @student.first_name %>
+				<%= @student.last_name %>
+			</h3>
 		</div>
 	</div>
 		
@@ -257,7 +418,7 @@
 					<%= f.label :email %>:
 					<%= f.text_field :email, :class => "form-control" %><br />
 					<%= f.hidden_field :team_id, value: @student.team_id %>
-					<%= f.hidden_field :student_id, value: @current_student.id %>
+					<%= f.hidden_field :student_id, value: @student.id %>
 				</div>
 				<div class="modal-footer">
 					<div class="row">
@@ -287,8 +448,6 @@
 				<div class="modal-body">
 					<%= f.label :interests %>:
 					<%= f.text_area :interests, :size => "40x10", :class => "form-control" %><br />
-					<%= f.hidden_field :team_id, value: @student.team_id %>
-					<%= f.hidden_field :student_id, value: @current_student.id %>
 				</div>
 				<div class="modal-footer">
 					<div class="row">
@@ -318,8 +477,6 @@
 				<div class="modal-body">
 					<%= f.label :name %>:
 					<%= f.text_field :name, :class => "form-control" %><br />
-					<%= f.hidden_field :team_id, value: @student.team_id %>
-					<%= f.hidden_field :student_id, value: @current_student.id %>
 				</div>
 				<div class="modal-footer">
 					<div class="row">
@@ -349,8 +506,6 @@
 				<div class="modal-body">
 					<%= f.label :point_of_contact %>:
 					<%= f.collection_select(:point_of_contact_id, Student.where(team_id: @student.team_id), :id, :full_name, {:prompt => true}, {:class => "form-control"}) %>
-					<%= f.hidden_field :team_id, value: @student.team_id %>
-					<%= f.hidden_field :student_id, value: @current_student.id %>
 				</div>
 				<div class="modal-footer">
 					<div class="row">
@@ -367,4 +522,3 @@
     </div>
   </div>
 </div>
-

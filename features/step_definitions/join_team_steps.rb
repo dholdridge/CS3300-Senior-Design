@@ -1,43 +1,41 @@
-Given(/^that I am a student$/) do
-    pending # express the regexp above with the code you wish you had
-end
+include TeamsHelper
+include JoinTeamContractsHelper
+include StudentsHelper
 
-Given(/^that I am not on a team$/) do
-    pending # express the regexp above with the code you wish you had
+Given(/^there is a team$/) do
+  @team = Team.create
 end
 
 When(/^I try to join a team$/) do
-    pending # express the regexp above with the code you wish you had
+  @team_contract = request_to_join_team(@student, @team)
 end
 
 When(/^a team is not full$/) do
-    pending # express the regexp above with the code you wish you had
+end
+
+When(/^the team accepts me$/) do
+  team_accept(@team_contract)
+end
+
+When(/^the team fills$/) do
+  @team.students << Student.new
+  @team.students << Student.new
+  @team.students << Student.new
+  @team.students << Student.new
+  @team.students << Student.new
+  @team.students << Student.new
+  @team.save
 end
 
 Then(/^I should be a member of a team$/) do
-    pending # express the regexp above with the code you wish you had
+  @student = Student.find_by(id: @student.id)
+  assert(@student.team_id == @team.id, @student.team_id)
 end
 
-Given(/^that I am on another team$/) do
-    pending # express the regexp above with the code you wish you had
+Then(/^the team contract should not be completeable$/) do
+  assert(!can_complete_contract?(@team_contract))
 end
 
-When(/^I try to join a team$/) do
-    pending # express the regexp above with the code you wish you had
-end
-
-Then(/^I should receive an error$/) do
-    pending # express the regexp above with the code you wish you had
-end
-
-Given(/^that I am not on a team$/) do
-    pending # express the regexp above with the code you wish you had
-end
-
-When(/^a team is full$/) do
-    pending # express the regexp above with the code you wish you had
-end
-
-Then(/^I should receive an error$/) do
-    pending # express the regexp above with the code you wish you had
+Then(/^the team contract should be made$/) do
+  assert(!@team_contract.nil?)
 end
