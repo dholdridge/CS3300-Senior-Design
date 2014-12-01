@@ -1,0 +1,39 @@
+<h1>Listing professors</h1>
+
+<ul class="nav nav-pills">
+  <li role="presentation" class="active"><%= link_to 'Home', root_url %></li>
+</ul><br />
+
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <div class="panel-title">
+      Professors
+    </div>
+  </div>
+  <div class="panel-body">
+    <table class="table" style="border: 1px solid rgb(221, 221, 221)">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Class ID</th>
+        <th>Select</th>
+        <th>Delete</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <% @professors.each do |professor| %>
+          <tr>
+            <td><%= professor.first_name + ' ' + professor.last_name %></td>
+            <td><%= professor.class_id %></td>
+            <td><%= link_to 'Choose', professor %></td>
+            <td><%= link_to 'Delete', professor, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<br>
+
+<%= link_to 'New Professor', new_professor_path %>
