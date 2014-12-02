@@ -61,7 +61,37 @@
         </tbody>
       </table>
     </div>
-
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        Pending Project Approvals
+      </h3>
+    </div>
+  </div>
+  
+  <div class="panel-body">
+    <div class="list-group">
+      <table class="table list-group-item" style="border: 1px solid rgb(221, 221, 221)">
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>Company</th>
+            <th>Approve or Disapprove</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @projects.each do |project| %>
+            <tr>
+              <td><%= project.name %></td>
+              <td><%= project.company_name %></td>
+              <td><%= project.approval  %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    
     <div class="list-group">
       <%= form_tag import_students_path, multipart: true, :class => "list-group-item form-inline" do %>
         <%= file_field_tag :file %>
