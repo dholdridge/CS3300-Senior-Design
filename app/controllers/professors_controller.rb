@@ -6,11 +6,14 @@ class ProfessorsController < ApplicationController
   def index
     @professors = Professor.all
   end
+  
+
 
   # GET /professors/1
   # GET /professors/1.json
   def show
     @students = Student.all
+    @projects = Project.all
   end
 
   # GET /professors/new
