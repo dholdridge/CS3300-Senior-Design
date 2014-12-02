@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20141119090608) do
     t.string   "project_skills"
     t.string   "project_solutions"
     t.boolean  "project_nda_required"
+	t.boolean  "project_approved"
     t.boolean  "project_funding_commitment"
     t.boolean  "project_company_email_conf"
     t.datetime "created_at"
