@@ -1,31 +1,47 @@
 <h1>Listing students</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>First name</th>
-      <th>Last name</th>
-      <th>Team</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+<ul class="nav nav-pills">
+	<li role="presentation" class="active"><%= link_to 'Home', students_path(@student) %></li>
+</ul><br />
 
-  <tbody>
-    <% @students.each do |student| %>
-      <tr>
-        <td><%= student.first_name %></td>
-        <td><%= student.last_name %></td>
-        <td><%= student.team_id %></td>
-        <td><%= link_to 'Show', student %></td>
-        <td><%= link_to 'Edit', edit_student_path(student) %></td>
-        <td><%= link_to 'Destroy', student, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <div class="panel-title">
+      List of Students
+    </div>
+  </div>
+  <div class="panel-body">
+    <table class="table" style="border: 1px solid rgb(221, 221, 221)">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Team Name</th>
+          <th>Project</th>
+          <th>Point of Contact</th>
+        </tr>
+      </thead>
 
-<br>
-
-<%= link_to 'New Student', new_student_path %>
+      <tbody>
+        <% @students.each do |student| %>
+        <% team = Team.find_by_id(student.team_id) %>
+          <tr>
+            <td><%= student.first_name + ' ' + student.last_name %></td>
+            <% unless team.nil? %>
+              <td><%= team.name %></td>
+            <% else %>
+              <td>N/A</td>
+            <% end %>
+            <td>Random Project Name</td>
+            <% unless team.nil? %>
+              <% poc = Student.find_by(first_name: team.point_of_contact.first_name,
+                                       last_name: team.point_of_contact.last_name) %>
+              <td><%= poc.first_name + ' ' + poc.last_name %></td>
+            <% else %>
+              <td>N/A</td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

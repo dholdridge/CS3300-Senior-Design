@@ -1,27 +1,304 @@
+<style>
+	/*Panel tabs*/
+	.panel-tabs {
+			position: relative;
+			bottom: 30px;
+			clear:both;
+			border-bottom: 1px solid transparent;
+	}
+
+	.panel-tabs > li {
+			float: left;
+			margin-bottom: -1px;
+	}
+
+	.panel-tabs > li > a {
+			margin-right: 2px;
+			margin-top: 5px;
+			line-height: .85;
+			border: 1px solid transparent;
+			border-radius: 4px 4px 0 0;
+			color: #ffffff;
+	}
+
+	.panel-tabs > li > a:hover {
+			border-color: transparent;
+			color: #ffffff;
+			background-color: transparent;
+	}
+
+	.panel-tabs > li.active > a,
+	.panel-tabs > li.active > a:hover,
+	.panel-tabs > li.active > a:focus {
+			color: #fff;
+			cursor: default;
+			-webkit-border-radius: 2px;
+			-moz-border-radius: 2px;
+			border-radius: 2px;
+			background-color: rgba(255,255,255, .23);
+			border-bottom-color: transparent;
+</style>
+
+<!--Parses the query string available in the html bar-->
+<% query_string = request.query_string
+	 unless query_string.nil?
+		if query_string.include? "sort-method"
+			sort_method = query_string.split("=")[1]
+		end
+	end
+%>
+
+<!--This form effectively "refreshes" the page, populating the query string in the html bar-->
+<!--with a sort method corresponding to the user-chosen one, which ruby parses with the method above--> 
+<form id="sort-method-form" method="get" action="/teams">
+	<input type="hidden" name="sort-method" id="hidden-sort-method" value="team_name" />
+</form>
+
 <h1>Listing teams</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+<ul class="nav nav-pills">
+	<li role="presentation" class="active"><%= link_to 'Home', students_path() + '/' + current_student.id.to_s %></li>
+<% if current_student.team_id.nil? %>
+	<li role="presentation"><%= link_to 'Create New Team', new_team_path %></li>
+<% end %>
+</ul><br />
 
-  <tbody>
-    <% @teams.each do |team| %>
-      <tr>
-        <td><%= team.name %></td>
-        <td><%= link_to 'Show', team %></td>
-        <td><%= link_to 'Edit', edit_team_path(team) %></td>
-        <td><%= link_to 'Destroy', team, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+		<h3 class="panel-title">Team Search</h3>
+    <span class="pull-right">
+			<ul class="nav panel-tabs">
+					<li class="active"><a href="#tab1" data-toggle="tab">List Teams</a></li>
+					<li><a href="#tab2" data-toggle="tab">List Teamless Students</a></li>
+			</ul>
+		</span>
+  </div>
+  <div class="panel-body">
+		<div class="tab-content">
+			<div class="tab-pane active" id="tab1">
+				<div class="row" style="margin-bottom:20px">
+					<div class="col col-md-1">
+						<div class="btn-group">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+								Sort By <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="#" id="team-name-header">Team Name</a></li>
+								<li><a href="#" id="project-name-header">Project Name</a></li>
+								<li><a href="#" id="poc-name-header">Point of Contact</a></li>
+								<li><a href="#" id="num-members-header">Number of Members</a></li>
+								<li><a href="#" id="creation-date-header">Creation Date</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<table class="table" style="border: 1px solid rgb(221, 221, 221)" width="100%">
+					<thead>
+						<tr>
+							<th width="20%">Team Name</th>
+							<th width="20%">Project Name</th>
+							<th width="15%">Point of Contact</th>
+							<th width="10%">Number of Members</th>
+							<th width="20%">Creation Date</th>
+							<th width="4%">View Team</th>
+						<% if current_student.team_id.nil? %>
+							<th width="11%">Join Team</th>
+						<% end %>
+						</tr>
+					</thead>
+					<tbody>
+					<% if sort_method.nil? or sort_method == "team_name" %>
+						<% @teams.sort! { |a,b| a.name <=> b.name } %>
+					<% elsif sort_method == "project_name" %>
+						<!--Projects not yet associated with teams-->
+					<% elsif sort_method == "poc_name" %>
+						<% @teams.sort! { |a,b| [a.point_of_contact.last_name, a.point_of_contact.first_name] <=> [b.point_of_contact.last_name, b.point_of_contact.first_name] } %>
+					<% elsif sort_method == "num_members" %>
+						<% @teams.sort! { |a,b| a.students.length <=> b.students.length } %>
+					<% elsif sort_method == "creation_date" %>
+						<% @teams.sort! { |a,b| a.created_at <=> b.created_at } %>
+					<% end %>
+					<% @teams.each do |team| %>
+						<% team_info = ''
+							 team.students.each do |student|
+								if student == team.point_of_contact
+									team_info += student.full_name + ' (PoC) <br />'
+								else
+									team_info += student.full_name + '<br />'
+								end
+							 end 
+							 if !team.point_of_contact.nil?
+							 	team_info += '<br />Contact: ' + '<u>' + team.point_of_contact.email + '</u>'
+							 end
+							 
+						%>		
+					
+						<% if current_student.team_id == team.id %>
+						<tr class="alert alert-success table-row" 
+								data-toggle="popover" data-placement="right" 
+								data-title="<%=team.name%>" 
+								data-content="<%=team_info%>">
+						<% else %>
+						<tr class="table-row" 
+								data-toggle="popover" data-placement="right" 
+								data-title="<%=team.name%>" 
+								data-content="<%=team_info%>">
+						<% end %>
+							<td><%= team.name %></td>
+							<td>Random Project Name</td>
+						<% unless team.point_of_contact.nil? %>
+							<td><%= team.point_of_contact.last_name + ', ' +
+											team.point_of_contact.first_name %></td>
+						<% else %>
+							<td style="color:red"> Error: no point of contact</td>
+						<% end %>
+							<td><%= team.students.length %></td>
+							<td><%= team.created_at %></td>
+							<td><a href="/teams/<%=team.id%>" target="_blank">View</a></td>
+						<% if current_student.team_id.nil? %>
+							<% current_contract = JoinTeamContract.where(:student_id => current_student.id, 
+										:team_id => team.id, :team_accepted => false, :student_accepted => true).first %>
+							<% if current_contract.nil? %>
+								<td>
+									<button type="button" class="btn btn-sm btn-default" 
+										onclick="request_invite_from('<%= team.name.html_safe %>', '<%= team.id.to_s.html_safe %>');">
+										Request Invite
+									</button>
+								</td>
+							<% else %>
+								<td width="10%">Request Sent <strong>*</strong></td>
+							<% end %>
+						<% end %>
+						</tr>
+					<% end %>
+					</tbody>
+				</table>
+				<%= form_for JoinTeamContract.new, :html => { :id => "request_invite_form" } do |f| %>
+					<%= f.hidden_field :team_id, id: "request_invite_team_id" %>
+					<%= f.hidden_field :student_id, value: current_student.id %>
+					<%= f.hidden_field :team_accepted, value: false %>
+					<%= f.hidden_field :student_accepted, value: true %>
+					<div style="display: none">
+						<%= f.submit "Request Invite", id: "request_invite_form_submit" %>
+					</div>
+				<% end %>
+				<p>
+					<hr />
+					<strong>*</strong> The team to which you sent the invitation request must first accept your invitation before you officially join the team.
+				</p>
+			</div>
+			<div class="tab-pane" id="tab2">
+				<table class="table" width="100%">
+					<thead>
+						<tr>
+							<th width="35%">Student Name</th>
+							<th width="35%">Email</th>
+							<th width="15%">View Student Page</th>
+						<% unless current_student.team_id.nil? %>
+							<th width="15%">Invite</th>
+						<% end %>
+						</tr>
+					</thead>
+					<tbody>
+						<% teamless_students = Student.where(:team_id => nil) %>
+						<% teamless_students.each do |student| %>
+							<tr>
+								<td><%= student.full_name %></td>
+								<td><%= student.email %></td>
+								<td><%= link_to 'View', student_path(id: student.id) %></td>
+								<% unless current_student.team_id.nil? %>
+									<% current_contract = JoinTeamContract.where(:student_id => student.id, 
+										:team_id => current_student.team_id, :team_accepted => true, :student_accepted => false).first %>
+									<% if current_contract.nil? %>
+										<td width="20%">
+											<button 
+												type="button"
+												class="btn btn-sm btn-default"
+												onclick="send_invite_to('<%= student.full_name.html_safe %>', '<%= student.id.to_s.html_safe %>');">
+												Send Invite
+											</button>
+										</td>
+									<% else %>
+										<td>Already Invited <strong>*</strong></td>
+									<% end %>
+								<% end %>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>
+				<%= form_for JoinTeamContract.new, :html => { :id => "send_invite_form" } do |f| %>
+					<%= f.hidden_field :team_id, value: current_student.team_id %>
+					<%= f.hidden_field :student_id, id: "send_invite_student_id" %>
+					<%= f.hidden_field :team_accepted, value: true %>
+					<%= f.hidden_field :student_accepted, value: false %>
+					<div style="display: none">
+						<%= f.submit "Send Invite", id: "send_invite_form_submit" %>
+					</div>
+				<% end %>
+				<p>
+					<hr />
+					<strong>*</strong> The student has already been extended an invitation by someone in your team. 
+				</p>
+			</div>
+		</div>
+  </div>
+</div>
 
-<br>
-
-<%= link_to 'New Team', new_team_path %>
+<script>
+	$(document).ready(function() {
+		$form = $('#sort-method-form');
+		$('#team-name-header').click(function() {
+			console.log('Sorting teams by team name.');
+			$('#hidden-sort-method').val('team_name');
+			$form.submit();
+		});
+		$('#project-name-header').click(function() {
+			console.log('Sorting teams by project name (not yet available).');
+			$('#hidden-sort-method').val('project_name');
+			$form.submit();
+		});
+		$('#poc-name-header').click(function() {
+			console.log('Sorting teams by point of contact name.');
+			$('#hidden-sort-method').val('poc_name');
+			$form.submit();
+		});
+		$('#num-members-header').click(function() {
+			console.log('Sorting teams by number of team members.');
+			$('#hidden-sort-method').val('num_members');
+			$form.submit();
+		});
+		$('#creation-date-header').click(function() {
+			console.log('Sorting teams by team creation date.');
+			$('#hidden-sort-method').val('creation_date');
+			$form.submit();
+		});
+	});
+	
+	$(function () {
+		$(".table-row").hover(function () {
+			$(this).popover({
+				html: true
+			}).popover('show');
+		}, function () {
+			$(this).popover('hide');
+		});
+	});
+	
+	function request_invite_from(team_name, team_id) {
+		var response = confirm("Are you sure you want to join the team \'" + team_name + "\'?\n\n" +
+		"Note that you must first wait for the team to accept your request before becoming a member.");
+		if (response) {
+			$("#request_invite_team_id").val(team_id);
+			$("#request_invite_form_submit").click();
+		}
+	}
+	
+	function send_invite_to(student_name, student_id) {
+		var response = confirm("Are you sure you want to invite " + student_name + " to your team?\n\n" +
+		"Note that the student must first accept your invitation before joining your team.");
+		if (response) {
+			$("#send_invite_student_id").val(student_id);
+			$("#send_invite_form_submit").click();
+		}
+	}
+</script>

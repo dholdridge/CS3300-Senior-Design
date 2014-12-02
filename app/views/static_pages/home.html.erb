@@ -3,18 +3,15 @@
 <table class = "center">
 	<tr>
 		<td>
-			<div class = "user-type"> Student </div>
-			
+      <%= link_to 'Students', students_path, :class => "user-type" %>
 		</td>
 
 		<td>
-			<div class = "user-type"> Sponsor </div>
-			
+      <%= link_to 'Sponsors', projects_path, :class => "user-type" %>
 		</td>
 
 		<td>
-			<div class = "user-type"> Instructor </div>
-			
+      <%= link_to 'Professors', professors_path, :class => "user-type" %>
 		</td>
 	</tr>
 </table>

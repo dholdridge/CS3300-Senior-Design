@@ -1,0 +1,197 @@
+<style>
+	h2 {
+		font-size: 26px;
+		color: black;
+	}
+	.bid_table_td {
+		position: relative;
+		height: 40px;
+		left: 10px;
+	}
+	.move-up {
+		height: 20px;
+	}
+	.move-down {
+		height: 20px;
+	}
+	.btn span {
+		position: relative;
+		bottom: 5px;
+	}
+	.dragging {
+		color: white !important;
+		background-color: #337AB7 !important;
+	}
+</style>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+<script type="text/javascript">
+	$(init);
+
+	var old_index;
+	function init() {
+		var fixHelperModified = function(e, tr) {
+			tr.addClass("dragging");
+			old_index = $("#sort tr").index(tr);
+			var $originals = tr.children();
+			var $helper = tr.clone();
+			$helper.children().each(function(index) {
+					$(this).width($originals.eq(index).width())
+			});
+			return $helper;
+		},
+			updateIndex = function(e, ui) {
+				$('td.index', ui.item.parent()).each(function (i) {
+						//$(this).html(i + 1);
+						$tr = $(this).parent();
+						if ($tr.hasClass("dragging")) {
+							$tr.fadeIn(100).fadeOut(300).fadeIn(300);
+							$tr.removeClass("dragging");
+							var new_priority = i + 1;
+							edit_bid_priority(new_priority);
+						}
+				});
+			};
+			
+		function edit_bid_priority(new_priority) {		
+			var form_priority_name = "#edit_bid_form_priority_" + old_index;
+			var form_submit_name = "#edit_bid_form_submit_" + old_index;
+			$(form_priority_name).val(new_priority);
+			$(form_submit_name).click();
+		}
+
+		$("#sort tbody").sortable({
+				helper: fixHelperModified,
+				stop: updateIndex
+		}).disableSelection();
+	} 
+</script>
+
+<% current_team = Team.find_by_id(current_student.team_id) %>
+<div class="row">
+	<div class="col col-md-7">
+		<div class="pull-left">
+			<h2>Available Projects</h2>
+			<div class="panel panel-primary">
+				<div class="panel-body">
+					<table class="table table-striped" width="100%">
+						<thead>
+							<tr>
+								<th>Project Name</th>
+								<th>Sponsor</th>
+								<th width="10%">No. of Current Bids</th>
+								<th>View Details</th>
+								<th>Place Bid</th>
+							</tr>
+						</thead>
+						<tbody>
+						<% for i in 1..10 %>
+							<tr>
+								<% project_name = "Random Name " + i.to_s %>
+								<td><%= project_name %></td>
+								<td>Random Sponsor <%= i %></td>
+								<td></td>
+								<td><a href="#">View</a></td>
+								<td>
+								<% preexisting_bid = Bid.where(project_id: i, team_id: current_student.team_id).first %>
+								<% if preexisting_bid.nil? %>
+									<button 
+										type="button" 
+										class="btn btn-sm btn-default"
+										onclick="place_bid('<%= project_name.html_safe %>', '<%= i.to_s.html_safe %>');">
+										Bid
+									</button>
+								<% else %>
+									Bid Placed <strong>*</strong>
+								<% end %>
+								</td>
+							</tr>
+						<% end %>
+						</tbody>
+					</table>
+					<hr />
+					<p><strong>*</strong> One of your team members has already bid on this project.</p>
+					<%= form_for Bid.new do |f| %>
+						<%= f.hidden_field :project_id, id: "bid_form_project_id" %>
+						<%= f.hidden_field :team_id, value: current_student.team_id %>
+						<%= f.hidden_field :priority, value: (Team.find(current_student.team_id).bids.length + 1) %>
+						<div style="display: none">
+							<%= f.submit "Submit", id: "bid_form_submit" %>
+						</div>
+					<% end %>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col col-md-5">
+		<div class="pull-left">
+			<h2><%= current_team.name %>&rsquo;s Active Bids</h2>
+			<div class="panel panel-primary">
+				<div class="panel-body">
+					<div id="bid_div_wrapper"> 
+						<table id="sort" class="table table-striped grid" width="100%">
+							<thead>
+								<tr>
+									<th class="index" width="10%">Priority</th>
+									<th width="40%">Project Name</th>
+									<th width="35%">Sponsor</th>
+									<th width="10%">View Details</th>
+								</tr>
+							</thead>
+							<tbody>
+							<% bid_count = 1 %>
+							<% current_team.bids.order("priority").each do |bid| %>
+								<tr>
+									<td class="index"><%= bid.priority %></td>
+									<td>Project id: <%= bid.project_id %></td>
+									<td>Random Sponsor <%= bid_count %></td>
+									<td><%= link_to "View", bid_path(bid.id) %></td>
+								</tr>
+								<%= form_for bid, class: "edit_bid" do |f| %>
+									<%= f.hidden_field :priority, class: "edit_bid_form_priority", id: "edit_bid_form_priority_" + bid_count.to_s %>
+									<div style="display: none">
+										<%= f.submit "Submit", id: "edit_bid_form_submit_" + bid_count.to_s %>
+									</div>
+								<% end %>
+								<% bid_count = bid_count + 1 %>
+							<% end %>
+							</tbody>
+						</table>
+						<hr />
+						<p>Drag-n-drop project bids to change their priorities.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function() {
+		$('table').on('click', '.move-up', function () {
+			var thisRow = $(this).closest('tr');
+			var prevRow = thisRow.prev();
+			if (prevRow.length) {
+					prevRow.before(thisRow);
+			}
+		});
+		
+		$('table').on('click', '.move-down', function () {
+			var thisRow = $(this).closest('tr');
+			var nextRow = thisRow.next();
+			if (nextRow.length) {
+					nextRow.after(thisRow);
+			}
+		});
+	});
+
+	function place_bid(project_name, project_id) {
+		var response = confirm("Are you sure you want to bid on project \'" + project_name + "\'?");
+		if (response) {
+			$("#bid_form_project_id").val(project_id);
+			$("#bid_form_submit").click();
+		}
+	}
+</script>
+		
